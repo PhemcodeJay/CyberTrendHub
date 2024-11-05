@@ -1,5 +1,4 @@
 <?php
-<?php
 
 // Function to create a new order
 function createOrder($orderData, $accessToken) {
@@ -127,3 +126,94 @@ if (isset($trackingInfo['data'])) {
     echo "Error retrieving tracking information: " . json_encode($trackingInfo);
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Order Management</h1>
+
+<!-- Create Order Form -->
+<h2>Create Order</h2>
+<form action="create_order.php" method="POST">
+    <label for="orderNumber">Order Number:</label>
+    <input type="text" id="orderNumber" name="orderNumber" required><br>
+    
+    <label for="shippingZip">Shipping Zip Code:</label>
+    <input type="text" id="shippingZip" name="shippingZip" required><br>
+    
+    <label for="shippingCountry">Shipping Country:</label>
+    <input type="text" id="shippingCountry" name="shippingCountry" required><br>
+    
+    <label for="shippingCity">Shipping City:</label>
+    <input type="text" id="shippingCity" name="shippingCity" required><br>
+
+    <label for="productVid">Product ID (vid):</label>
+    <input type="text" id="productVid" name="productVid" required><br>
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required><br>
+    
+    <button type="submit">Create Order</button>
+</form>
+
+<!-- Check Order Status Form -->
+<h2>Check Order Status</h2>
+<form action="order_status.php" method="GET">
+    <label for="orderId">Order ID:</label>
+    <input type="text" id="orderId" name="orderId" required><br>
+    
+    <button type="submit">Check Status</button>
+</form>
+
+<!-- Track Order Form -->
+<h2>Track Order</h2>
+<form action="track_order.php" method="GET">
+    <label for="trackingNumber">Tracking Number:</label>
+    <input type="text" id="trackingNumber" name="trackingNumber" required><br>
+    
+    <button type="submit">Track Order</button>
+</form>
+
+<div class="response">
+    <h3>Response:</h3>
+    <p id="responseText">Your response will appear here.</p>
+</div>
+
+</body>
+</html>

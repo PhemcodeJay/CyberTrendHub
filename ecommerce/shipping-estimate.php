@@ -98,3 +98,72 @@ if (isset($shippingAndTracking['trackingInfo'])) {
     echo "Error retrieving tracking information: " . json_encode($shippingAndTracking['trackingInfo']);
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping and Tracking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Shipping and Tracking</h1>
+
+<!-- Shipping Estimate Form -->
+<h2>Estimate Shipping Cost</h2>
+<form action="shipping_and_tracking.php" method="POST">
+    <label for="startCountryCode">Start Country Code:</label>
+    <input type="text" id="startCountryCode" name="startCountryCode" required><br>
+    
+    <label for="endCountryCode">End Country Code:</label>
+    <input type="text" id="endCountryCode" name="endCountryCode" required><br>
+
+    <label for="productVid">Product ID (VID):</label>
+    <input type="text" id="productVid" name="productVid" required><br>
+
+    <label for="quantity">Product Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required><br>
+
+    <label for="trackingNumbers">Tracking Numbers (comma separated):</label>
+    <input type="text" id="trackingNumbers" name="trackingNumbers" required><br>
+
+    <button type="submit">Estimate Shipping and Track</button>
+</form>
+
+<div class="response">
+    <h3>Response:</h3>
+    <p id="responseText">Your response will appear here.</p>
+</div>
+
+</body>
+</html>

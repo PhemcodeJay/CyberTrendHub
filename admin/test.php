@@ -1,258 +1,404 @@
 <?php require_once('header.php'); ?>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form1'])) {
-    // Initialize validation and error handling
-    $valid = 1;
-    $error_message = '';
+if(isset($_POST['form1'])) {
+	$valid = 1;
 
-    // Validation checks for required fields
-    $required_fields = [
-        'tcat_id' => 'You must select a top-level category',
-        'mcat_id' => 'You must select a mid-level category',
-        'ecat_id' => 'You must select an end-level category',
-        'p_name' => 'Product name cannot be empty',
-        'p_current_price' => 'Current price cannot be empty',
-        'p_qty' => 'Quantity cannot be empty'
-    ];
-
-    foreach ($required_fields as $field => $error) {
-        if (empty($_POST[$field])) {
-            $valid = 0;
-            $error_message .= $error . "<br>";
-        }
-    }
-
-    // Validate featured photo
-    if (empty($_FILES['p_featured_photo']['name'])) {
+    if(empty($_POST['tcat_id'])) {
         $valid = 0;
-        $error_message .= 'You must select a featured photo<br>';
-    } else {
-        $file_info = pathinfo($_FILES['p_featured_photo']['name']);
-        $file_ext = strtolower($file_info['extension']);
-        $allowed_exts = ['jpg', 'jpeg', 'png', 'gif'];
+        $error_message .= "You must have to select a top level category<br>";
+    }
 
-        if (!in_array($file_ext, $allowed_exts)) {
+    if(empty($_POST['mcat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select a mid level category<br>";
+    }
+
+    if(empty($_POST['ecat_id'])) {
+        $valid = 0;
+        $error_message .= "You must have to select an end level category<br>";
+    }
+
+    if(empty($_POST['p_name'])) {
+        $valid = 0;
+        $error_message .= "Product name can not be empty<br>";
+    }
+
+    if(empty($_POST['p_current_price'])) {
+        $valid = 0;
+        $error_message .= "Current Price can not be empty<br>";
+    }
+
+    if(empty($_POST['p_qty'])) {
+        $valid = 0;
+        $error_message .= "Quantity can not be empty<br>";
+    }
+
+    $path = $_FILES['p_featured_photo']['name'];
+    $path_tmp = $_FILES['p_featured_photo']['tmp_name'];
+
+    if($path!='') {
+        $ext = pathinfo( $path, PATHINFO_EXTENSION );
+        $file_name = basename( $path, '.' . $ext );
+        if( $ext!='jpg' && $ext!='png' && $ext!='jpeg' && $ext!='gif' ) {
             $valid = 0;
-            $error_message .= 'Featured photo must be a jpg, jpeg, png, or gif file<br>';
+            $error_message .= 'You must have to upload jpg, jpeg, gif or png file<br>';
         }
+    } else {
+    	$valid = 0;
+        $error_message .= 'You must have to select a featured photo<br>';
     }
 
-    if ($valid) {
-        try {
-            // Generate unique ID for product
-            $product_id = $pdo->query("SHOW TABLE STATUS LIKE 'tbl_product'")->fetch(PDO::FETCH_ASSOC)['Auto_increment'];
 
-            // Handle photo uploads and save other photos
-            $uploaded_photos = handleMultipleUploads($_FILES['photo'] ?? [], '../assets/uploads/product_photos/');
-            foreach ($uploaded_photos as $photo) {
-                $pdo->prepare("INSERT INTO tbl_product_photo (photo, p_id) VALUES (?, ?)")
-                    ->execute([$photo, $product_id]);
+    if($valid == 1) {
+
+    	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product'");
+		$statement->execute();
+		$result = $statement->fetchAll();
+		foreach($result as $row) {
+			$ai_id=$row[10];
+		}
+
+    	if( isset($_FILES['photo']["name"]) && isset($_FILES['photo']["tmp_name"]) )
+        {
+        	$photo = array();
+            $photo = $_FILES['photo']["name"];
+            $photo = array_values(array_filter($photo));
+
+        	$photo_temp = array();
+            $photo_temp = $_FILES['photo']["tmp_name"];
+            $photo_temp = array_values(array_filter($photo_temp));
+
+        	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product_photo'");
+			$statement->execute();
+			$result = $statement->fetchAll();
+			foreach($result as $row) {
+				$next_id1=$row[10];
+			}
+			$z = $next_id1;
+
+            $m=0;
+            for($i=0;$i<count($photo);$i++)
+            {
+                $my_ext1 = pathinfo( $photo[$i], PATHINFO_EXTENSION );
+		        if( $my_ext1=='jpg' || $my_ext1=='png' || $my_ext1=='jpeg' || $my_ext1=='gif' ) {
+		            $final_name1[$m] = $z.'.'.$my_ext1;
+                    move_uploaded_file($photo_temp[$i],"../assets/uploads/product_photos/".$final_name1[$m]);
+                    $m++;
+                    $z++;
+		        }
             }
 
-            // Save main product image
-            $featured_photo = 'product-featured-' . $product_id . '.' . $file_ext;
-            move_uploaded_file($_FILES['p_featured_photo']['tmp_name'], '../assets/uploads/' . $featured_photo);
-
-            // Insert product data
-            $pdo->prepare("INSERT INTO tbl_product (p_name, p_old_price, p_current_price, p_qty, p_featured_photo, 
-                            p_description, p_short_description, p_feature, p_condition, p_return_policy, 
-                            p_total_view, p_is_featured, p_is_active, ecat_id)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)")
-                ->execute([
-                    $_POST['p_name'], $_POST['p_old_price'], $_POST['p_current_price'], $_POST['p_qty'], $featured_photo,
-                    $_POST['p_description'], $_POST['p_short_description'], $_POST['p_feature'], $_POST['p_condition'],
-                    $_POST['p_return_policy'], $_POST['p_is_featured'], $_POST['p_is_active'], $_POST['ecat_id']
-                ]);
-
-            // Save product sizes and colors
-            insertProductAttributes($pdo, 'tbl_product_size', 'size_id', $_POST['size'] ?? [], $product_id);
-            insertProductAttributes($pdo, 'tbl_product_color', 'color_id', $_POST['color'] ?? [], $product_id);
-
-            $success_message = 'Product added successfully.';
-        } catch (Exception $e) {
-            $error_message = 'An error occurred: ' . $e->getMessage();
+            if(isset($final_name1)) {
+            	for($i=0;$i<count($final_name1);$i++)
+		        {
+		        	$statement = $pdo->prepare("INSERT INTO tbl_product_photo (photo,p_id) VALUES (?,?)");
+		        	$statement->execute(array($final_name1[$i],$ai_id));
+		        }
+            }            
         }
-    }
-}
 
-// Helper function to handle multiple photo uploads
-function handleMultipleUploads(array $photos, string $target_directory): array {
-    $uploaded_files = [];
-    $allowed_exts = ['jpg', 'jpeg', 'png', 'gif'];
-    foreach ($photos['name'] as $index => $name) {
-        if (!empty($name)) {
-            $file_ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-            if (in_array($file_ext, $allowed_exts)) {
-                $file_name = uniqid() . '.' . $file_ext;
-                move_uploaded_file($photos['tmp_name'][$index], $target_directory . $file_name);
-                $uploaded_files[] = $file_name;
-            }
-        }
-    }
-    return $uploaded_files;
-}
+		$final_name = 'product-featured-'.$ai_id.'.'.$ext;
+        move_uploaded_file( $path_tmp, '../assets/uploads/'.$final_name );
 
-// Helper function to insert product attributes (e.g., sizes or colors)
-function insertProductAttributes(PDO $pdo, string $table, string $column, array $values, int $product_id) {
-    foreach ($values as $value) {
-        $pdo->prepare("INSERT INTO $table ($column, p_id) VALUES (?, ?)")
-            ->execute([$value, $product_id]);
+		//Saving data into the main table tbl_product
+		$statement = $pdo->prepare("INSERT INTO tbl_product(
+										p_name,
+										p_old_price,
+										p_current_price,
+										p_qty,
+										p_featured_photo,
+										p_description,
+										p_short_description,
+										p_feature,
+										p_condition,
+										p_return_policy,
+										p_total_view,
+										p_is_featured,
+										p_is_active,
+										ecat_id
+									) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$statement->execute(array(
+										$_POST['p_name'],
+										$_POST['p_old_price'],
+										$_POST['p_current_price'],
+										$_POST['p_qty'],
+										$final_name,
+										$_POST['p_description'],
+										$_POST['p_short_description'],
+										$_POST['p_feature'],
+										$_POST['p_condition'],
+										$_POST['p_return_policy'],
+										0,
+										$_POST['p_is_featured'],
+										$_POST['p_is_active'],
+										$_POST['ecat_id']
+									));
+
+		
+
+        if(isset($_POST['size'])) {
+			foreach($_POST['size'] as $value) {
+				$statement = $pdo->prepare("INSERT INTO tbl_product_size (size_id,p_id) VALUES (?,?)");
+				$statement->execute(array($value,$ai_id));
+			}
+		}
+
+		if(isset($_POST['color'])) {
+			foreach($_POST['color'] as $value) {
+				$statement = $pdo->prepare("INSERT INTO tbl_product_color (color_id,p_id) VALUES (?,?)");
+				$statement->execute(array($value,$ai_id));
+			}
+		}
+	
+    	$success_message = 'Product is added successfully.';
     }
 }
 ?>
 
-<!-- JavaScript for toggling fields based on product type -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const productTypeSelector = document.getElementById('productType');
-
-    productTypeSelector.addEventListener('change', toggleFields);
-
-    function toggleFields() {
-        const selectedType = productTypeSelector.value;
-        document.getElementById('digitalFields').style.display = (selectedType === 'digital') ? 'block' : 'none';
-        document.getElementById('dropshippingFields').style.display = (selectedType === 'dropshipping') ? 'block' : 'none';
-        document.getElementById('personalFields').style.display = (selectedType === 'personal') ? 'block' : 'none';
-    }
-    
-    // Initial toggle based on pre-selected value
-    toggleFields();
-});
-</script>
-
-<?php if (!empty($error_message)): ?>
-    <div class="error"><?= $error_message ?></div>
-<?php elseif (!empty($success_message)): ?>
-    <div class="success"><?= $success_message ?></div>
-<?php endif; ?>
-
 <section class="content-header">
-    <div class="content-header-left">
-        <h1>Add Product</h1>
-    </div>
-    <div class="content-header-right">
-        <a href="product.php" class="btn btn-primary btn-sm">View All</a>
-    </div>
+	<div class="content-header-left">
+		<h1>Add Product</h1>
+	</div>
+	<div class="content-header-right">
+		<a href="product.php" class="btn btn-primary btn-sm">View All</a>
+	</div>
 </section>
+
 
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">
-            <!-- Error and Success Messages -->
-            <?php if(!empty($error_message)): ?>
-                <div class="alert alert-danger"><?php echo $error_message; ?></div>
-            <?php endif; ?>
-            <?php if(!empty($success_message)): ?>
-                <div class="alert alert-success"><?php echo $success_message; ?></div>
-            <?php endif; ?>
 
-            <!-- Form Start -->
-            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-                <!-- Product Type -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Product Type</label>
-                    <div class="col-sm-4">
-                        <select name="product_type" id="productType" class="form-control" onchange="toggleFields()">
-                            <option value="goods">Physical Goods</option>
-                            <option value="digital">Digital Product</option>
-                            <option value="dropshipping">Dropshipping</option>
-                        </select>
-                    </div>
+	<div class="row">
+		<div class="col-md-12">
+
+			<?php if($error_message): ?>
+			<div class="callout callout-danger">
+			
+			<p>
+			<?php echo $error_message; ?>
+			</p>
+			</div>
+			<?php endif; ?>
+
+			<?php if($success_message): ?>
+			<div class="callout callout-success">
+			
+			<p><?php echo $success_message; ?></p>
+			</div>
+			<?php endif; ?>
+
+            
+
+			<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+                 <!-- Product Type -->
+            <div class="form-group">
+                <label for="" class="col-sm-3 control-label">Product Type</label>
+                <div class="col-sm-4">
+                    <select name="product_type" id="productType" class="form-control">
+                        <option value="goods">Physical Products</option>
+                        <option value="digital">Digital Product</option>
+                        <option value="dropshipping">Dropshipping</option>
+                    </select>
                 </div>
+            </div>
 
-                <!-- General Product Fields -->
-                <div class="box box-info">
-                    <div class="box-body">
-                        <!-- Top-Level Category Selection -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Top Level Category <span>*</span></label>
-                            <div class="col-sm-4">
-                                <select name="tcat_id" class="form-control select2">
-                                    <option value="">Select Top Level Category</option>
-                                    <?php
-                                        $categories = $pdo->query("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC")->fetchAll();
-                                        foreach ($categories as $category) {
-                                            echo "<option value='{$category['tcat_id']}'>{$category['tcat_name']}</option>";
-                                        }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
 
-                        <!-- Other Fields (Quantity, Price, Name, etc.) -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Product Name <span>*</span></label>
-                            <div class="col-sm-4">
-                                <input type="text" name="p_name" class="form-control" required>
-                            </div>
-                        </div>
-                        <!-- Other general fields like price, quantity, size, color go here -->
-                    </div>
-                </div>
+				<div class="box box-info">
+					<div class="box-body">
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<select name="tcat_id" class="form-control select2 top-cat">
+									<option value="">Select Top Level Category</option>
+									<?php
+									$statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+									$statement->execute();
+									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
+									foreach ($result as $row) {
+										?>
+										<option value="<?php echo $row['tcat_id']; ?>"><?php echo $row['tcat_name']; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<select name="mcat_id" class="form-control select2 mid-cat">
+									<option value="">Select Mid Level Category</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+							<div class="col-sm-4">
+								<select name="ecat_id" class="form-control select2 end-cat">
+									<option value="">Select End Level Category</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Product Name <span>*</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="p_name" class="form-control">
+							</div>
+						</div>	
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Old Price <br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="p_old_price" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="p_current_price" class="form-control">
+							</div>
+						</div>	
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Quantity <span>*</span></label>
+							<div class="col-sm-4">
+								<input type="text" name="p_qty" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Select Size</label>
+							<div class="col-sm-4">
+								<select name="size[]" class="form-control select2" multiple="multiple">
+									<?php
+									$statement = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
+									$statement->execute();
+									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
+									foreach ($result as $row) {
+										?>
+										<option value="<?php echo $row['size_id']; ?>"><?php echo $row['size_name']; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Select Color</label>
+							<div class="col-sm-4">
+								<select name="color[]" class="form-control select2" multiple="multiple">
+									<?php
+									$statement = $pdo->prepare("SELECT * FROM tbl_color ORDER BY color_id ASC");
+									$statement->execute();
+									$result = $statement->fetchAll(PDO::FETCH_ASSOC);			
+									foreach ($result as $row) {
+										?>
+										<option value="<?php echo $row['color_id']; ?>"><?php echo $row['color_name']; ?></option>
+										<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Featured Photo <span>*</span></label>
+							<div class="col-sm-4" style="padding-top:4px;">
+								<input type="file" name="p_featured_photo">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Other Photos</label>
+							<div class="col-sm-4" style="padding-top:4px;">
+								<table id="ProductTable" style="width:100%;">
+			                        <tbody>
+			                            <tr>
+			                                <td>
+			                                    <div class="upload-btn">
+			                                        <input type="file" name="photo[]" style="margin-bottom:5px;">
+			                                    </div>
+			                                </td>
+			                                <td style="width:28px;"><a href="javascript:void()" class="Delete btn btn-danger btn-xs">X</a></td>
+			                            </tr>
+			                        </tbody>
+			                    </table>
+							</div>
+							<div class="col-sm-2">
+			                    <input type="button" id="btnAddNew" value="Add Item" style="margin-top: 5px;margin-bottom:10px;border:0;color: #fff;font-size: 14px;border-radius:3px;" class="btn btn-warning btn-xs">
+			                </div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Description</label>
+							<div class="col-sm-8">
+								<textarea name="p_description" class="form-control" cols="30" rows="10" id="editor1"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Short Description</label>
+							<div class="col-sm-8">
+								<textarea name="p_short_description" class="form-control" cols="30" rows="10" id="editor2"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Features</label>
+							<div class="col-sm-8">
+								<textarea name="p_feature" class="form-control" cols="30" rows="10" id="editor3"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Conditions</label>
+							<div class="col-sm-8">
+								<textarea name="p_condition" class="form-control" cols="30" rows="10" id="editor4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Return Policy</label>
+							<div class="col-sm-8">
+								<textarea name="p_return_policy" class="form-control" cols="30" rows="10" id="editor5"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Is Featured?</label>
+							<div class="col-sm-8">
+								<select name="p_is_featured" class="form-control" style="width:auto;">
+									<option value="0">No</option>
+									<option value="1">Yes</option>
+								</select> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label">Is Active?</label>
+							<div class="col-sm-8">
+								<select name="p_is_active" class="form-control" style="width:auto;">
+									<option value="0">No</option>
+									<option value="1">Yes</option>
+								</select> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="" class="col-sm-3 control-label"></label>
+							<div class="col-sm-6">
+								<button type="submit" class="btn btn-success pull-left" name="form1">Add Product</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
-                <!-- Dropshipping Fields -->
-                <div id="dropshippingFields" style="display:none;">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Supplier Name <span>*</span></label>
-                        <div class="col-sm-4">
-                            <input type="text" name="supplier_name" class="form-control" required>
-                        </div>
-                    </div>
-                    <!-- Additional dropshipping fields (Supplier Contact, Website, etc.) -->
-                </div>
-
-                <!-- Digital Product Fields -->
-                <div id="digitalFields" style="display:none;">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Digital Product File <span>*</span></label>
-                        <div class="col-sm-4">
-                            <input type="file" name="digital_file" required>
-                        </div>
-                    </div>
-                    <!-- Additional digital product fields (Digital Type, License, etc.) -->
-                </div>
-
-                <!-- Submit Button -->
-                <div class="form-group">
-                    <div class="col-sm-offset-3 col-sm-4">
-                        <button type="submit" class="btn btn-success" name="form1">Add Product</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-
+			</form>
 
 <script>
-    // Function to toggle fields based on the selected product type
-    function toggleFields() {
-        const productType = document.getElementById('productType').value || document.getElementById('product_type').value;
-        
-        const digitalFields = document.getElementById('digitalFields');
-        const dropshippingFields = document.getElementById('dropshippingFields');
-        const personalFields = document.getElementById('personalFields');
-        
-        // Hide all sections initially
-        digitalFields.style.display = 'none';
-        dropshippingFields.style.display = 'none';
-        if (personalFields) personalFields.style.display = 'none'; // Check if personalFields exists
+    document.getElementById('productType').addEventListener('change', function () {
+    var selectedType = this.value;
 
-        // Show the relevant section based on the selected product type
-        if (productType === 'digital') {
-            digitalFields.style.display = 'block';
-        } else if (productType === 'dropshipping') {
-            dropshippingFields.style.display = 'block';
-        } else if (productType === 'personal' && personalFields) {
-            personalFields.style.display = 'block';
-        }
+    // Redirect to the corresponding page based on the selected product type
+    if (selectedType === 'digital') {
+        window.location.href = 'add-digital-product.php'; // Redirect to Digital Product page
+    } else if (selectedType === 'dropshipping') {
+        window.location.href = 'add-dropshipping-product.php'; // Redirect to Dropshipping Product page
     }
+});
 
-    // Event listener for product type selection change
-    document.getElementById('productType')?.addEventListener('change', toggleFields);
-    document.getElementById('product_type')?.addEventListener('change', toggleFields);
+
 </script>
+		</div>
+	</div>
 
+</section>
 
 <?php require_once('footer.php'); ?>

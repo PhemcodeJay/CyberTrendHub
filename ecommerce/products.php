@@ -1,5 +1,4 @@
 <?php
-<?php
 
 // Function to get product details by product ID
 function getProductDetail($productId, $accessToken) {
@@ -104,3 +103,73 @@ if (isset($categories['data'])) {
     echo "Error retrieving product categories: " . json_encode($categories) . "\n";
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Product Management</h1>
+
+<!-- Get Product Detail Form -->
+<h2>Get Product Details</h2>
+<form action="get_product_detail.php" method="POST">
+    <label for="productId">Enter Product ID:</label>
+    <input type="text" id="productId" name="productId" required><br>
+    
+    <button type="submit">Get Product Details</button>
+</form>
+
+<!-- Get Product List Form -->
+<h2>Get Product List</h2>
+<form action="get_product_list.php" method="POST">
+    <button type="submit">Get Product List</button>
+</form>
+
+<!-- Get Product Categories Form -->
+<h2>Get Product Categories</h2>
+<form action="get_product_categories.php" method="POST">
+    <button type="submit">Get Categories</button>
+</form>
+
+<div class="response">
+    <h3>Response:</h3>
+    <p id="responseText">Your response will appear here.</p>
+</div>
+
+</body>
+</html>

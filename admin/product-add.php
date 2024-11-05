@@ -188,6 +188,17 @@ if(isset($_POST['form1'])) {
 			<?php endif; ?>
 
 			<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+				<!-- Product Type -->
+				<div class="form-group">
+								<label for="" class="col-sm-3 control-label">Product Type</label>
+								<div class="col-sm-4">
+									<select name="product_type" id="productType" class="form-control">
+										<option value="goods">Physical Products</option>
+										<option value="digital">Digital Product</option>
+										<option value="dropshipping">Dropshipping</option>
+									</select>
+								</div>
+							</div>
 
 				<div class="box box-info">
 					<div class="box-body">
@@ -371,7 +382,20 @@ if(isset($_POST['form1'])) {
 
 		</div>
 	</div>
+	<script>
+    document.getElementById('productType').addEventListener('change', function () {
+    var selectedType = this.value;
 
+    // Redirect to the corresponding page based on the selected product type
+    if (selectedType === 'digital') {
+        window.location.href = 'add-digital-product.php'; // Redirect to Digital Product page
+    } else if (selectedType === 'dropshipping') {
+        window.location.href = 'add-dropshipping-product.php'; // Redirect to Dropshipping Product page
+    }
+});
+
+
+</script>
 </section>
 
 <?php require_once('footer.php'); ?>
