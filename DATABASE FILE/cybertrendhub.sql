@@ -410,9 +410,6 @@ CREATE TABLE `tbl_digital_products` (
     `is_digital` BOOLEAN DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `tbl_digital_products` (`name`, `description`, `price`, `file_url`, `is_digital`) VALUES
-('E-book: Learning PHP', 'A comprehensive guide to learning PHP programming.', 19.99, 'uploads/files/learning_php_ebook.pdf', TRUE),
-('Digital Course: Web Development', 'An in-depth course on modern web development techniques.', 99.99, 'uploads/files/web_development_course.mp4', TRUE),
 
 
 -- --------------------------------------------------------
