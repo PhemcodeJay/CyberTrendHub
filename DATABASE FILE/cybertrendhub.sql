@@ -416,6 +416,39 @@ INSERT INTO `tbl_digital_products` (`name`, `description`, `price`, `file_url`, 
 
 
 -- --------------------------------------------------------
+-- Table structure for table `tbl_mid_category`
+--
+
+CREATE TABLE `tbl_mid_category` (
+  `mcat_id` int(11) NOT NULL,
+  `mcat_name` varchar(255) NOT NULL,
+  `tcat_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_mid_category`
+--
+
+INSERT INTO `tbl_mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
+(1, 'Men Accessories', 1),
+(2, 'Men\'s Shoes', 1),
+(3, 'Beauty Products', 2),
+(4, 'Accessories', 2),
+(6, 'Shoes', 2),
+(7, 'Clothing', 2),
+(8, 'Bottoms', 1),
+(9, 'T-shirts & Shirts', 1),
+(10, 'Clothing', 3),
+(11, 'Shoes', 3),
+(12, 'Accessories', 3),
+(14, 'Electronic Items', 4),
+(15, 'Computers', 4),
+(16, 'Health', 5),
+(17, 'Household', 5);
+
+-- --------------------------------------------------------
+
+
 
 --
 -- Table structure for table `tbl_end_category`
@@ -731,73 +764,7 @@ INSERT INTO `tbl_language` (`lang_id`, `lang_name`, `lang_value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_mid_category`
 --
-
-CREATE TABLE `tbl_mid_category` (
-  `mcat_id` int(11) NOT NULL,
-  `mcat_name` varchar(255) NOT NULL,
-  `tcat_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_mid_category`
---
-
-INSERT INTO `tbl_mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
-(1, 'Men Accessories', 1),
-(2, 'Men\'s Shoes', 1),
-(3, 'Beauty Products', 2),
-(4, 'Accessories', 2),
-(6, 'Shoes', 2),
-(7, 'Clothing', 2),
-(8, 'Bottoms', 1),
-(9, 'T-shirts & Shirts', 1),
-(10, 'Clothing', 3),
-(11, 'Shoes', 3),
-(12, 'Accessories', 3),
-(14, 'Electronic Items', 4),
-(15, 'Computers', 4),
-(16, 'Health', 5),
-(17, 'Household', 5);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_order`
---
-
--- Orders Table for Both Digital and Dropshipping Products
-CREATE TABLE `tbl_order` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `product_name` varchar(255) NOT NULL,
-  `customer_email` varchar(255) NOT NULL,
-  `size` varchar(100) DEFAULT NULL,
-  `color` varchar(100) DEFAULT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL,
-  `payment_id` varchar(255) NOT NULL,
-  `aliexpress_order_id` varchar(100) DEFAULT NULL,
-  `cj_order_id` varchar(100) DEFAULT NULL,
-  `tracking_number` varchar(100) DEFAULT NULL,
-  `carrier` varchar(100) DEFAULT NULL,
-  `order_status` varchar(50) DEFAULT 'Pending',
-  `shipping_status` varchar(50) DEFAULT 'Processing',
-  `estimated_delivery` date DEFAULT NULL,
-  `download_code` varchar(32) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tbl_order`
---
-
-INSERT INTO `tbl_order` (`id`, `product_id`, `product_name`, `size`, `color`, `quantity`, `unit_price`, `payment_id`) VALUES
-(1, 83, 'Men\'s Ultra Cotton T-Shirt, Multipack', 'XL', 'Gray', '1', '19', '1647629329'),
-(2, 92, 'Travelpro Laptop Carry-on Travel Tote Bag', 'One Size for All', 'Midnight Blue', '1', '91', '1647798593'),
-(4, 101, 'Digital Infrared Thermometer for Adults and Kids', 'One Size for All', 'White', '1', '70', '1647799174'),
-(5, 94, 'WD 5TB Elements Portable External Hard Drive HDD', '5T', 'Black', '1', '149', '1647800902');
 
 -- --------------------------------------------------------
 
@@ -1000,6 +967,41 @@ INSERT INTO `tbl_product` (`p_id`, `p_name`, `p_old_price`, `p_current_price`, `
 (102, 'Women\'s Plus-Size Shirt Dress with Gold Hardware', '190', '169', 112, 'product-featured-102.jpg', '<p><span style=\"color: rgb(15, 17, 17); font-family: &quot;Amazon Ember&quot;, Arial, sans-serif; font-size: 14px;\">This dress has everything! Enough stretch to be forgiving. Works for my hourglass/pear shape just fine. The cap sleeves satisfy conservative dressing requirements (no sleeveless) but still works for spring/summer.</span><br></p>', '<p>From Calvin Klein</p>', '<ul class=\"a-unordered-list a-vertical a-spacing-mini\" style=\"margin-right: 0px; margin-bottom: 0px; margin-left: 18px; color: rgb(15, 17, 17); padding: 0px; font-family: &quot;Amazon Ember&quot;, Arial, sans-serif; font-size: 14px;\"><li style=\"list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"overflow-wrap: break-word; display: block;\">Cap-sleeve shirt dress featuring belted waist with gold-tone hardware accents</span></li><li style=\"list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"overflow-wrap: break-word; display: block;\">Split v-neckline</span></li><li style=\"list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"overflow-wrap: break-word; display: block;\">Exposed center back zipper</span></li></ul>', '<p><span style=\"color: rgb(51, 51, 51); font-size: 14px;\">This is a sample text for conditions.</span><br></p>', '<p><span style=\"margin: 0px; padding: 0px; color: rgb(32, 33, 36); font-family: arial, sans-serif; font-size: 16px;\">Offers a&nbsp;</span><span style=\"margin: 0px; padding: 0px; color: rgb(32, 33, 36); font-family: arial, sans-serif; font-size: 16px;\">15 to 30-day window</span><span style=\"margin: 0px; padding: 0px; color: rgb(32, 33, 36); font-family: arial, sans-serif; font-size: 16px;\">&nbsp;in which customers can return a product and ask for a refund. Some businesses extend that period up to 90 days. Regardless of the time frame you choose, ensuring that you actually have a time frame is essential.</span><br></p>', 11, 1, 1, 32);
 
 -- --------------------------------------------------------
+-- Table structure for table `tbl_order`
+--
+
+-- Orders Table for Both Digital and Dropshipping Products
+CREATE TABLE `tbl_order` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `customer_email` varchar(255) NOT NULL,
+  `size` varchar(100) DEFAULT NULL,
+  `color` varchar(100) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `payment_id` varchar(255) NOT NULL,
+  `aliexpress_order_id` varchar(100) DEFAULT NULL,
+  `cj_order_id` varchar(100) DEFAULT NULL,
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `carrier` varchar(100) DEFAULT NULL,
+  `order_status` varchar(50) DEFAULT 'Pending',
+  `shipping_status` varchar(50) DEFAULT 'Processing',
+  `estimated_delivery` date DEFAULT NULL,
+  `download_code` varchar(32) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_order`
+--
+
+INSERT INTO `tbl_order` (`id`, `product_id`, `product_name`, `size`, `color`, `quantity`, `unit_price`, `payment_id`) VALUES
+(1, 83, 'Men\'s Ultra Cotton T-Shirt, Multipack', 'XL', 'Gray', '1', '19', '1647629329'),
+(2, 92, 'Travelpro Laptop Carry-on Travel Tote Bag', 'One Size for All', 'Midnight Blue', '1', '91', '1647798593'),
+(4, 101, 'Digital Infrared Thermometer for Adults and Kids', 'One Size for All', 'White', '1', '70', '1647799174'),
+(5, 94, 'WD 5TB Elements Portable External Hard Drive HDD', '5T', 'Black', '1', '149', '1647800902');
+
 
 --
 -- Table structure for table `tbl_product_color`
