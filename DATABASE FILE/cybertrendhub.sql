@@ -76,7 +76,7 @@ INSERT INTO `tbl_color` (`color_id`, `color_name`) VALUES
 CREATE TABLE `tbl_country` (
   `country_id` int(11) NOT NULL,
   `country_name` varchar(100) NOT NULL DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `tbl_country`
@@ -397,7 +397,7 @@ CREATE TABLE `tbl_customer_message` (
   `message` text NOT NULL,
   `order_detail` text NOT NULL,
   `cust_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 -- Digital Products Table
@@ -557,7 +557,7 @@ CREATE TABLE `tbl_language` (
   `lang_id` int(11) NOT NULL,
   `lang_name` varchar(255) NOT NULL,
   `lang_value` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_language`
@@ -769,25 +769,24 @@ INSERT INTO `tbl_mid_category` (`mcat_id`, `mcat_name`, `tcat_id`) VALUES
 
 -- Orders Table for Both Digital and Dropshipping Products
 CREATE TABLE `tbl_order` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `product_id` INT(11) NOT NULL,
-  `product_name` VARCHAR(255) NOT NULL,
-  `customer_email` VARCHAR(255) NOT NULL,
-  `size` VARCHAR(100) DEFAULT NULL,
-  `color` VARCHAR(100) DEFAULT NULL,
-  `quantity` INT(11) NOT NULL,
-  `unit_price` DECIMAL(10,2) NOT NULL,
-  `payment_id` VARCHAR(255) NOT NULL,
-  `aliexpress_order_id` VARCHAR(100) DEFAULT NULL,
-  `cj_order_id` VARCHAR(100) DEFAULT NULL,
-  `tracking_number` VARCHAR(100) DEFAULT NULL,
-  `carrier` VARCHAR(100) DEFAULT NULL,
-  `order_status` VARCHAR(50) DEFAULT 'Pending',
-  `shipping_status` VARCHAR(50) DEFAULT 'Processing',
-  `estimated_delivery` DATE DEFAULT NULL,
-  `download_code` VARCHAR(32) UNIQUE DEFAULT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`product_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE SET NULL
+  `id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `customer_email` varchar(255) NOT NULL,
+  `size` varchar(100) DEFAULT NULL,
+  `color` varchar(100) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `payment_id` varchar(255) NOT NULL,
+  `aliexpress_order_id` varchar(100) DEFAULT NULL,
+  `cj_order_id` varchar(100) DEFAULT NULL,
+  `tracking_number` varchar(100) DEFAULT NULL,
+  `carrier` varchar(100) DEFAULT NULL,
+  `order_status` varchar(50) DEFAULT 'Pending',
+  `shipping_status` varchar(50) DEFAULT 'Processing',
+  `estimated_delivery` date DEFAULT NULL,
+  `download_code` varchar(32) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -871,7 +870,7 @@ CREATE TABLE `tbl_payment` (
   `payment_status` varchar(25) NOT NULL,
   `shipping_status` varchar(20) NOT NULL,
   `payment_id` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_payment`
@@ -1801,7 +1800,6 @@ INSERT INTO `tbl_video` (`id`, `title`, `iframe_code`) VALUES
 (2, 'Video 2', '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/sinQ06YzbJI\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>'),
 (4, 'Video 3', '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/ViZNgU-Yt-Y\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>');
 
---
 -- Indexes for dumped tables
 --
 
@@ -1821,19 +1819,30 @@ ALTER TABLE `tbl_country`
 -- Indexes for table `tbl_customer`
 --
 ALTER TABLE `tbl_customer`
-  ADD PRIMARY KEY (`cust_id`);
+  ADD PRIMARY KEY (`cust_id`),
+  ADD KEY `cust_country` (`cust_country`),
+  ADD KEY `cust_b_country` (`cust_b_country`),
+  ADD KEY `cust_s_country` (`cust_s_country`);
 
 --
 -- Indexes for table `tbl_customer_message`
 --
 ALTER TABLE `tbl_customer_message`
-  ADD PRIMARY KEY (`customer_message_id`);
+  ADD PRIMARY KEY (`customer_message_id`),
+  ADD KEY `cust_id` (`cust_id`);
+
+--
+-- Indexes for table `tbl_digital_products`
+--
+ALTER TABLE `tbl_digital_products`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_end_category`
 --
 ALTER TABLE `tbl_end_category`
-  ADD PRIMARY KEY (`ecat_id`);
+  ADD PRIMARY KEY (`ecat_id`),
+  ADD KEY `mcat_id` (`mcat_id`);
 
 --
 -- Indexes for table `tbl_faq`
@@ -1857,7 +1866,9 @@ ALTER TABLE `tbl_mid_category`
 -- Indexes for table `tbl_order`
 --
 ALTER TABLE `tbl_order`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `download_code` (`download_code`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `tbl_page`
@@ -1869,7 +1880,8 @@ ALTER TABLE `tbl_page`
 -- Indexes for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_id` (`customer_id`);
 
 --
 -- Indexes for table `tbl_photo`
@@ -1881,65 +1893,177 @@ ALTER TABLE `tbl_photo`
 -- Indexes for table `tbl_post`
 --
 ALTER TABLE `tbl_post`
-  ADD PRIMARY KEY (`post_id`);
+  ADD PRIMARY KEY (`post_id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Indexes for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  ADD PRIMARY KEY (`p_id`);
-
---
--- Indexes for table `tbl_product_color`
---
-ALTER TABLE `tbl_product_color`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`p_id`),
+  ADD KEY `ecat_id` (`ecat_id`);
 
 --
 -- Indexes for table `tbl_product_photo`
 --
 ALTER TABLE `tbl_product_photo`
-  ADD PRIMARY KEY (`pp_id`);
+  ADD PRIMARY KEY (`pp_id`),
+  ADD KEY `pphoto_id` (`pphoto_id`);
 
 --
--- Indexes for table `tbl_product_size`
+-- Indexes for table `tbl_shipping_info`
 --
-ALTER TABLE `tbl_product_size`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `tbl_rating`
---
-ALTER TABLE `tbl_rating`
-  ADD PRIMARY KEY (`rt_id`);
-
---
--- Indexes for table `tbl_service`
---
-ALTER TABLE `tbl_service`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `tbl_settings`
---
-ALTER TABLE `tbl_settings`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `tbl_shipping_cost`
---
-ALTER TABLE `tbl_shipping_cost`
-  ADD PRIMARY KEY (`shipping_cost_id`);
+ALTER TABLE `tbl_shipping_info`
+  ADD PRIMARY KEY (`shipping_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `tbl_settings`
+-- AUTO_INCREMENT for table `tbl_color`
 --
-ALTER TABLE `tbl_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `tbl_color`
+  MODIFY `color_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_country`
+--
+ALTER TABLE `tbl_country`
+  MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_customer`
+--
+ALTER TABLE `tbl_customer`
+  MODIFY `cust_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_customer_message`
+--
+ALTER TABLE `tbl_customer_message`
+  MODIFY `customer_message_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_digital_products`
+--
+ALTER TABLE `tbl_digital_products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_end_category`
+--
+ALTER TABLE `tbl_end_category`
+  MODIFY `ecat_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_faq`
+--
+ALTER TABLE `tbl_faq`
+  MODIFY `faq_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_language`
+--
+ALTER TABLE `tbl_language`
+  MODIFY `lang_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_mid_category`
+--
+ALTER TABLE `tbl_mid_category`
+  MODIFY `mcat_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_order`
+--
+ALTER TABLE `tbl_order`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_page`
+--
+ALTER TABLE `tbl_page`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_product`
+--
+ALTER TABLE `tbl_product`
+  MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_product_photo`
+--
+ALTER TABLE `tbl_product_photo`
+  MODIFY `pp_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_shipping_info`
+--
+ALTER TABLE `tbl_shipping_info`
+  MODIFY `shipping_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tbl_customer`
+--
+ALTER TABLE `tbl_customer`
+  ADD CONSTRAINT `tbl_customer_ibfk_1` FOREIGN KEY (`cust_country`) REFERENCES `tbl_country` (`country_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tbl_customer_ibfk_2` FOREIGN KEY (`cust_b_country`) REFERENCES `tbl_country` (`country_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tbl_customer_ibfk_3` FOREIGN KEY (`cust_s_country`) REFERENCES `tbl_country` (`country_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `tbl_customer_message`
+--
+ALTER TABLE `tbl_customer_message`
+  ADD CONSTRAINT `tbl_customer_message_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `tbl_customer` (`cust_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tbl_end_category`
+--
+ALTER TABLE `tbl_end_category`
+  ADD CONSTRAINT `tbl_end_category_ibfk_1` FOREIGN KEY (`mcat_id`) REFERENCES `tbl_mid_category` (`mcat_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tbl_order`
+--
+ALTER TABLE `tbl_order`
+  ADD CONSTRAINT `tbl_order_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`p_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `tbl_payment`
+--
+ALTER TABLE `tbl_payment`
+  ADD CONSTRAINT `tbl_payment_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `tbl_customer` (`cust_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tbl_post`
+--
+ALTER TABLE `tbl_post`
+  ADD CONSTRAINT `tbl_post_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_end_category` (`ecat_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tbl_product`
+--
+ALTER TABLE `tbl_product`
+  ADD CONSTRAINT `tbl_product_ibfk_1` FOREIGN KEY (`ecat_id`) REFERENCES `tbl_end_category` (`ecat_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `tbl_product_photo`
+--
+ALTER TABLE `tbl_product_photo`
+  ADD CONSTRAINT `tbl_product_photo_ibfk_1` FOREIGN KEY (`pphoto_id`) REFERENCES `tbl_product` (`p_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tbl_shipping_info`
+--
+ALTER TABLE `tbl_shipping_info`
+  ADD CONSTRAINT `tbl_shipping_info_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `tbl_order` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -137,6 +137,18 @@ CREATE TABLE `tbl_faq` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+-- Inventory Table for Dropshipping Products
+CREATE TABLE `tbl_inventory` (
+  `inventory_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `p_id` INT(11) NOT NULL,
+  `products_id` INT(11) NOT NULL,
+  `sku` VARCHAR(100) NOT NULL,
+  `stock` INT(11) NOT NULL,
+  `cost_price` DECIMAL(10,2) NOT NULL,
+  `retail_price` DECIMAL(10,2) NOT NULL,
+  `source` ENUM('AliExpress', 'CJ') NOT NULL,
+  FOREIGN KEY (`products_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Table structure for table `tbl_language`
