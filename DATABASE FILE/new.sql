@@ -28,8 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tbl_color` (
-  `color_id` int(11) NOT NULL AUTO_INCREMENT,
-  `color_name` varchar(255) NOT NULL
+  `color_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `color_name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`color_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
