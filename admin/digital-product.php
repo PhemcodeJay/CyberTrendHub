@@ -1,11 +1,9 @@
 <?php
 // Include database configuration
-
 require_once __DIR__ . '/inc/config.php';
 
 // Define secure files directory
 $file_base_path = realpath(__DIR__ . '/../assets/uploads/files'); // Directory for digital products (outside web root)
-
 
 // Check if a download code is provided for file downloads
 if (isset($_GET['download_code'])) {
@@ -62,19 +60,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'], $_POST[
 <head>
     <meta charset="UTF-8">
     <title>Digital Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .product-card h2 {
+            font-size: 24px;
+            color: #0073e6;
+        }
+        .product-card p {
+            color: #555;
+        }
+        .product-card .price {
+            font-size: 20px;
+            color: #28a745;
+            margin: 10px 0;
+        }
+        .product-card form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .product-card input[type="email"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .product-card button {
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #0073e6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .product-card button:hover {
+            background-color: #005bb5;
+        }
+    </style>
 </head>
 <body>
     <h1>Available Digital Products</h1>
 
     <?php foreach ($products as $product): ?>
-        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
+        <div class="product-card">
             <h2><?php echo htmlspecialchars($product['name']); ?></h2>
             <p><?php echo htmlspecialchars($product['description']); ?></p>
-            <p>Price: $<?php echo number_format($product['price'], 2); ?></p>
+            <p class="price">$<?php echo number_format($product['price'], 2); ?></p>
             <form method="POST" action="digital-product.php">
                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                 <label for="customer_email">Your Email:</label>
-                <input type="email" name="customer_email" required>
+                <input type="email" name="customer_email" placeholder="Enter your email" required>
                 <button type="submit">Buy Now</button>
             </form>
         </div>
