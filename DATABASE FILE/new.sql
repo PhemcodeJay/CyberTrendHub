@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cybertrendhub`
+-- Database: `new`
 --
 
 -- --------------------------------------------------------
@@ -28,8 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tbl_color` (
-  `color_id` int(11) NOT NULL,
-  `color_name` varchar(255) NOT NULL
+  `color_id` int(11) NOT NULL AUTO_INCREMENT,
+  `color_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`color_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -41,9 +42,10 @@ CREATE TABLE `tbl_color` (
 --
 
 CREATE TABLE `tbl_country` (
-  `country_id` int(11) NOT NULL,
-  `country_name` varchar(100) NOT NULL DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `country_id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_name` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`country_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 -- --------------------------------------------------------
@@ -53,12 +55,12 @@ CREATE TABLE `tbl_country` (
 --
 
 CREATE TABLE `tbl_customer` (
-  `cust_id` int(11) NOT NULL,
+  `cust_id` int(11) NOT NULL AUTO_INCREMENT,
   `cust_name` varchar(100) NOT NULL,
   `cust_cname` varchar(100) NOT NULL,
   `cust_email` varchar(100) NOT NULL,
   `cust_phone` varchar(50) NOT NULL,
-  `cust_country` int(11) NOT NULL,
+  `cust_country` int(11) DEFAULT NULL,
   `cust_address` text NOT NULL,
   `cust_city` varchar(100) NOT NULL,
   `cust_state` varchar(100) NOT NULL,
@@ -66,7 +68,7 @@ CREATE TABLE `tbl_customer` (
   `cust_b_name` varchar(100) NOT NULL,
   `cust_b_cname` varchar(100) NOT NULL,
   `cust_b_phone` varchar(50) NOT NULL,
-  `cust_b_country` int(11) NOT NULL,
+  `cust_b_country` int(11) DEFAULT NULL,
   `cust_b_address` text NOT NULL,
   `cust_b_city` varchar(100) NOT NULL,
   `cust_b_state` varchar(100) NOT NULL,
@@ -74,7 +76,7 @@ CREATE TABLE `tbl_customer` (
   `cust_s_name` varchar(100) NOT NULL,
   `cust_s_cname` varchar(100) NOT NULL,
   `cust_s_phone` varchar(50) NOT NULL,
-  `cust_s_country` int(11) NOT NULL,
+  `cust_s_country` int(11) DEFAULT NULL,
   `cust_s_address` text NOT NULL,
   `cust_s_city` varchar(100) NOT NULL,
   `cust_s_state` varchar(100) NOT NULL,
@@ -83,7 +85,11 @@ CREATE TABLE `tbl_customer` (
   `cust_token` varchar(255) NOT NULL,
   `cust_datetime` varchar(100) NOT NULL,
   `cust_timestamp` varchar(100) NOT NULL,
-  `cust_status` int(1) NOT NULL
+  `cust_status` int(1) NOT NULL,
+  PRIMARY KEY (`cust_id`),
+  FOREIGN KEY (`cust_country`) REFERENCES `tbl_country`(`country_id`) ON DELETE SET NULL,
+  FOREIGN KEY (`cust_b_country`) REFERENCES `tbl_country`(`country_id`) ON DELETE SET NULL,
+  FOREIGN KEY (`cust_s_country`) REFERENCES `tbl_country`(`country_id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -94,36 +100,54 @@ CREATE TABLE `tbl_customer` (
 --
 
 CREATE TABLE `tbl_customer_message` (
-  `customer_message_id` int(11) NOT NULL,
+  `customer_message_id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` varchar(255) NOT NULL,
   `message` text NOT NULL,
   `order_detail` text NOT NULL,
-  `cust_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_end_category`
---
-
-CREATE TABLE `tbl_end_category` (
-  `ecat_id` int(11) NOT NULL,
-  `ecat_name` varchar(255) NOT NULL,
-  `mcat_id` int(11) NOT NULL
+  `cust_id` int(11) NOT NULL,
+  PRIMARY KEY (`customer_message_id`),
+  FOREIGN KEY (`cust_id`) REFERENCES `tbl_customer`(`cust_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+-- Table for mid categories
+CREATE TABLE `tbl_mid_category` (
+  `mcat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `mcat_name` varchar(255) NOT NULL,
+  `tcat_id` int(11) NOT NULL,
+  PRIMARY KEY (`mcat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Table for end categories, referencing mid categories
+CREATE TABLE `tbl_end_category` (
+  `ecat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ecat_name` varchar(255) NOT NULL,
+  `mcat_id` int(11) NOT NULL,
+  PRIMARY KEY (`ecat_id`),
+  FOREIGN KEY (`mcat_id`) REFERENCES `tbl_mid_category`(`mcat_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+-- Digital Products Table
+CREATE TABLE `tbl_digital_products` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT,
+    `price` DECIMAL(10, 2) NOT NULL,
+    `file_url` VARCHAR(255) NOT NULL, -- path to digital product file
+    `is_digital` BOOLEAN DEFAULT TRUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Table structure for table `tbl_faq`
 --
 
 CREATE TABLE `tbl_faq` (
-  `faq_id` int(11) NOT NULL,
+  `faq_id` int(11) NOT NULL AUTO_INCREMENT,
   `faq_title` varchar(255) NOT NULL,
-  `faq_content` text NOT NULL
+  `faq_content` text NOT NULL,
+  PRIMARY KEY (`faq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -134,41 +158,18 @@ CREATE TABLE `tbl_faq` (
 --
 
 CREATE TABLE `tbl_language` (
-  `lang_id` int(11) NOT NULL,
+  `lang_id` int(11) NOT NULL AUTO_INCREMENT,
   `lang_name` varchar(255) NOT NULL,
-  `lang_value` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_mid_category`
---
-
-CREATE TABLE `tbl_mid_category` (
-  `mcat_id` int(11) NOT NULL,
-  `mcat_name` varchar(255) NOT NULL,
-  `tcat_id` int(11) NOT NULL
+  `lang_value` text NOT NULL,
+  PRIMARY KEY (`lang_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `tbl_order`
---
 
-CREATE TABLE `tbl_order` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `product_name` varchar(255) NOT NULL,
-  `size` varchar(100) NOT NULL,
-  `color` varchar(100) NOT NULL,
-  `quantity` varchar(50) NOT NULL,
-  `unit_price` varchar(50) NOT NULL,
-  `payment_id` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+
 
 
 -- --------------------------------------------------------
@@ -178,38 +179,39 @@ CREATE TABLE `tbl_order` (
 --
 
 CREATE TABLE `tbl_page` (
-  `id` int(11) NOT NULL,
-  `about_title` varchar(255) NOT NULL,
-  `about_content` text NOT NULL,
-  `about_banner` varchar(255) NOT NULL,
-  `about_meta_title` varchar(255) NOT NULL,
-  `about_meta_keyword` text NOT NULL,
-  `about_meta_description` text NOT NULL,
-  `faq_title` varchar(255) NOT NULL,
-  `faq_banner` varchar(255) NOT NULL,
-  `faq_meta_title` varchar(255) NOT NULL,
-  `faq_meta_keyword` text NOT NULL,
-  `faq_meta_description` text NOT NULL,
-  `blog_title` varchar(255) NOT NULL,
-  `blog_banner` varchar(255) NOT NULL,
-  `blog_meta_title` varchar(255) NOT NULL,
-  `blog_meta_keyword` text NOT NULL,
-  `blog_meta_description` text NOT NULL,
-  `contact_title` varchar(255) NOT NULL,
-  `contact_banner` varchar(255) NOT NULL,
-  `contact_meta_title` varchar(255) NOT NULL,
-  `contact_meta_keyword` text NOT NULL,
-  `contact_meta_description` text NOT NULL,
-  `pgallery_title` varchar(255) NOT NULL,
-  `pgallery_banner` varchar(255) NOT NULL,
-  `pgallery_meta_title` varchar(255) NOT NULL,
-  `pgallery_meta_keyword` text NOT NULL,
-  `pgallery_meta_description` text NOT NULL,
-  `vgallery_title` varchar(255) NOT NULL,
-  `vgallery_banner` varchar(255) NOT NULL,
-  `vgallery_meta_title` varchar(255) NOT NULL,
-  `vgallery_meta_keyword` text NOT NULL,
-  `vgallery_meta_description` text NOT NULL
+  `id` INT(11) NOT NULL AUTO_INCREMENT,  -- Adding AUTO_INCREMENT for primary key
+  `about_title` VARCHAR(255) NOT NULL,
+  `about_content` TEXT NOT NULL,
+  `about_banner` VARCHAR(255) NOT NULL,
+  `about_meta_title` VARCHAR(255) NOT NULL,
+  `about_meta_keyword` TEXT NOT NULL,
+  `about_meta_description` TEXT NOT NULL,
+  `faq_title` VARCHAR(255) NOT NULL,
+  `faq_banner` VARCHAR(255) NOT NULL,
+  `faq_meta_title` VARCHAR(255) NOT NULL,
+  `faq_meta_keyword` TEXT NOT NULL,
+  `faq_meta_description` TEXT NOT NULL,
+  `blog_title` VARCHAR(255) NOT NULL,
+  `blog_banner` VARCHAR(255) NOT NULL,
+  `blog_meta_title` VARCHAR(255) NOT NULL,
+  `blog_meta_keyword` TEXT NOT NULL,
+  `blog_meta_description` TEXT NOT NULL,
+  `contact_title` VARCHAR(255) NOT NULL,
+  `contact_banner` VARCHAR(255) NOT NULL,
+  `contact_meta_title` VARCHAR(255) NOT NULL,
+  `contact_meta_keyword` TEXT NOT NULL,
+  `contact_meta_description` TEXT NOT NULL,
+  `pgallery_title` VARCHAR(255) NOT NULL,
+  `pgallery_banner` VARCHAR(255) NOT NULL,
+  `pgallery_meta_title` VARCHAR(255) NOT NULL,
+  `pgallery_meta_keyword` TEXT NOT NULL,
+  `pgallery_meta_description` TEXT NOT NULL,
+  `vgallery_title` VARCHAR(255) NOT NULL,
+  `vgallery_banner` VARCHAR(255) NOT NULL,
+  `vgallery_meta_title` VARCHAR(255) NOT NULL,
+  `vgallery_meta_keyword` TEXT NOT NULL,
+  `vgallery_meta_description` TEXT NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -235,8 +237,10 @@ CREATE TABLE `tbl_payment` (
   `payment_method` varchar(20) NOT NULL,
   `payment_status` varchar(25) NOT NULL,
   `shipping_status` varchar(20) NOT NULL,
-  `payment_id` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `payment_id` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`customer_id`) REFERENCES `tbl_customer`(`cust_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- --------------------------------------------------------
@@ -248,7 +252,8 @@ CREATE TABLE `tbl_payment` (
 CREATE TABLE `tbl_photo` (
   `id` int(11) NOT NULL,
   `caption` varchar(255) NOT NULL,
-  `photo` varchar(255) NOT NULL
+  `photo` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -258,18 +263,21 @@ CREATE TABLE `tbl_photo` (
 -- Table structure for table `tbl_post`
 --
 
+-- Table structure for table `tbl_post`
 CREATE TABLE `tbl_post` (
-  `post_id` int(11) NOT NULL,
-  `post_title` varchar(255) NOT NULL,
-  `post_slug` varchar(255) NOT NULL,
-  `post_content` text NOT NULL,
-  `post_date` varchar(255) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  `total_view` int(11) NOT NULL,
-  `meta_title` varchar(255) NOT NULL,
-  `meta_keyword` text NOT NULL,
-  `meta_description` text NOT NULL
+    `post_id` INT(11) NOT NULL,
+    `post_title` VARCHAR(255) NOT NULL,
+    `post_slug` VARCHAR(255) NOT NULL,
+    `post_content` TEXT NOT NULL,
+    `post_date` VARCHAR(255) NOT NULL,
+    `photo` VARCHAR(255) NOT NULL,
+    `category_id` INT(11) NOT NULL,
+    `total_view` INT(11) NOT NULL,
+    `meta_title` VARCHAR(255) NOT NULL,
+    `meta_keyword` TEXT NOT NULL,
+    `meta_description` TEXT NOT NULL,
+    PRIMARY KEY (`post_id`),
+    FOREIGN KEY (`category_id`) REFERENCES `tbl_end_category`(`ecat_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -279,27 +287,61 @@ CREATE TABLE `tbl_post` (
 -- Table structure for table `tbl_product`
 --
 
+-- Table for products, with foreign key reference to tbl_end_category
 CREATE TABLE `tbl_product` (
-  `p_id` int(11) NOT NULL,
-  `p_name` varchar(255) NOT NULL,
-  `p_old_price` varchar(10) NOT NULL,
-  `p_current_price` varchar(10) NOT NULL,
-  `p_qty` int(10) NOT NULL,
-  `p_featured_photo` varchar(255) NOT NULL,
-  `p_description` text NOT NULL,
-  `p_short_description` text NOT NULL,
-  `p_feature` text NOT NULL,
-  `p_condition` text NOT NULL,
-  `p_return_policy` text NOT NULL,
-  `p_total_view` int(11) NOT NULL,
-  `p_is_featured` int(1) NOT NULL,
-  `p_is_active` int(1) NOT NULL,
-  `ecat_id` int(11) NOT NULL
+  `p_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `p_name` VARCHAR(255) NOT NULL,
+  `p_old_price` DECIMAL(10,2) NOT NULL,
+  `p_current_price` DECIMAL(10,2) NOT NULL,
+  `p_qty` INT(10) NOT NULL,
+  `p_featured_photo` VARCHAR(255) NOT NULL,
+  `p_description` TEXT NOT NULL,
+  `p_short_description` TEXT NOT NULL,
+  `p_feature` TEXT NOT NULL,
+  `p_condition` TEXT NOT NULL,
+  `p_return_policy` TEXT NOT NULL,
+  `p_total_view` INT(11) NOT NULL,
+  `p_is_featured` INT(1) NOT NULL,
+  `p_is_active` INT(1) NOT NULL,
+  `ecat_id` INT(11),
+  `aliexpress_product_id` VARCHAR(100) DEFAULT NULL,
+  `cj_product_id` VARCHAR(100) DEFAULT NULL,
+  `source_url` VARCHAR(255) DEFAULT NULL,
+  `vendor_name` VARCHAR(50) DEFAULT NULL,
+  `inventory_sync` TINYINT(1) DEFAULT 1,
+  FOREIGN KEY (`ecat_id`) REFERENCES `tbl_end_category`(`ecat_id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- --------------------------------------------------------
+--
+-- Table structure for table `tbl_order`
+--
 
+-- Table for orders, with foreign key reference to tbl_product
+CREATE TABLE `tbl_order` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `product_id` INT(11) DEFAULT NULL,  -- Allows NULL for ON DELETE SET NULL
+  `product_name` VARCHAR(255) NOT NULL,
+  `customer_email` VARCHAR(255) NOT NULL,
+  `size` VARCHAR(100) DEFAULT NULL,
+  `color` VARCHAR(100) DEFAULT NULL,
+  `quantity` INT(11) NOT NULL,
+  `unit_price` DECIMAL(10,2) NOT NULL,
+  `payment_id` VARCHAR(255) NOT NULL,
+  `aliexpress_order_id` VARCHAR(100) DEFAULT NULL,
+  `cj_order_id` VARCHAR(100) DEFAULT NULL,
+  `tracking_number` VARCHAR(100) DEFAULT NULL,
+  `carrier` VARCHAR(100) DEFAULT NULL,
+  `order_status` VARCHAR(50) DEFAULT 'Pending',
+  `shipping_status` VARCHAR(50) DEFAULT 'Processing',
+  `estimated_delivery` DATE DEFAULT NULL,
+  `download_code` VARCHAR(32) UNIQUE DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`product_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 --
 -- Table structure for table `tbl_product_color`
 --
@@ -472,6 +514,20 @@ CREATE TABLE `tbl_shipping_cost_all` (
 
 -- --------------------------------------------------------
 
+
+-- Shipping Information Table for Tracking
+
+CREATE TABLE `tbl_shipping_info` (
+  `shipping_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `order_id` INT(11) NOT NULL,  -- Must match `tbl_order`.`id` type
+  `tracking_number` VARCHAR(100) NOT NULL,
+  `carrier` VARCHAR(100) NOT NULL,
+  `status` VARCHAR(50) DEFAULT 'In Transit',
+  `estimated_arrival` DATE DEFAULT NULL,
+  FOREIGN KEY (`order_id`) REFERENCES `tbl_order`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 --
 -- Table structure for table `tbl_size`
 --

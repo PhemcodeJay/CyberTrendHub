@@ -39,7 +39,7 @@ if (isset($_GET['download_code'])) {
 // If no download code, display products and process purchases
 
 // Retrieve digital products
-$products = $pdo->query("SELECT * FROM tbl_product WHERE is_digital = TRUE")->fetchAll();
+$products = $pdo->query("SELECT * FROM tbl_digital_products WHERE is_digital = TRUE")->fetchAll();
 
 // Handle purchase form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'], $_POST['customer_email'])) {
