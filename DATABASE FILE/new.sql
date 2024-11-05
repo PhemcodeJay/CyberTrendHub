@@ -351,23 +351,20 @@ CREATE TABLE `tbl_product_color` (
   `color_id` int(11) NOT NULL,
   `p_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-- --------------------------------------------------------
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `tbl_product_photo`
 --
 
 CREATE TABLE `tbl_product_photo` (
-  `pp_id` int(11) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `p_id` int(11) NOT NULL
+    `pp_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `photo` VARCHAR(255) NOT NULL,
+    `pphoto_id` INT(11) NOT NULL,
+    PRIMARY KEY (`pp_id`),
+    FOREIGN KEY (`pphoto_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `tbl_product_size`
 --
