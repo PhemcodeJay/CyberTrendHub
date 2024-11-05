@@ -411,7 +411,6 @@ CREATE TABLE `tbl_digital_products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-
 -- --------------------------------------------------------
 -- Table structure for table `tbl_mid_category`
 --
@@ -564,19 +563,6 @@ INSERT INTO `tbl_faq` (`faq_id`, `faq_title`, `faq_content`) VALUES
 (4, 'When are ‘Returns’ not possible?', '<p class=\"a  \" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; line-height: 1.6; margin-bottom: 0.714286rem; padding: 0px; font-size: 14px; color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; background-color: rgb(250, 250, 250);\">There are a few certain scenarios where it is difficult for us to support returns:</p><ol style=\"box-sizing: inherit; line-height: 1.6; margin-right: 0px; margin-bottom: 0px; margin-left: 1.25rem; padding: 0px; list-style-position: outside; color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; font-size: 14px; background-color: rgb(250, 250, 250);\"><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Return request is made outside the specified time frame, of 15 days from delivery.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Product is used, damaged, or is not in the same condition as you received it.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Specific categories like innerwear, lingerie, socks and clothing freebies etc.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Defective products which are covered under the manufacturer\'s warranty.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Any consumable item which has been used or installed.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Products with tampered or missing serial numbers.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Anything missing from the package you\'ve received including price tags, labels, original packing, freebies and accessories.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Fragile items, hygiene related items.</li></ol>\r\n'),
 (5, 'What are the items that cannot be returned?', '<p>The items that can not be returned are:</p><p>Clearance items clearly marked as such and displaying a No-Return Policy<br></p><p>When the offer notes states so specifically are items that cannot be returned.</p><p>Items that fall into the below product types-</p><ul><li>Underwear</li><li>Lingerie</li><li>Socks</li><li>Software</li><li>Music albums</li><li>Books</li><li>Swimwear</li><li>Beauty &amp; Fragrances</li><li>Hosiery</li></ul><p>Also, any consumable items that are used or installed cannot be returned. As outlined in consumer Protection Rights and concerning section on non-returnable items<br></p>');
 
--- --------------------------------------------------------
--- Inventory Table for Dropshipping Products
-CREATE TABLE `tbl_inventory` (
-  `inventory_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `p_id` INT(11) NOT NULL,
-  `products_id` INT(11) NOT NULL,
-  `sku` VARCHAR(100) NOT NULL,
-  `stock` INT(11) NOT NULL,
-  `cost_price` DECIMAL(10,2) NOT NULL,
-  `retail_price` DECIMAL(10,2) NOT NULL,
-  `source` ENUM('AliExpress', 'CJ') NOT NULL,
-  FOREIGN KEY (`products_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 --
@@ -999,6 +985,19 @@ INSERT INTO `tbl_order` (`id`, `product_id`, `product_name`, `size`, `color`, `q
 (4, 101, 'Digital Infrared Thermometer for Adults and Kids', 'One Size for All', 'White', '1', '70', '1647799174'),
 (5, 94, 'WD 5TB Elements Portable External Hard Drive HDD', '5T', 'Black', '1', '149', '1647800902');
 
+-- --------------------------------------------------------
+-- Inventory Table for Dropshipping Products
+CREATE TABLE `tbl_inventory` (
+  `inventory_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `p_id` INT(11) NOT NULL,
+  `products_id` INT(11) NOT NULL,
+  `sku` VARCHAR(100) NOT NULL,
+  `stock` INT(11) NOT NULL,
+  `cost_price` DECIMAL(10,2) NOT NULL,
+  `retail_price` DECIMAL(10,2) NOT NULL,
+  `source` ENUM('AliExpress', 'CJ') NOT NULL,
+  FOREIGN KEY (`products_id`) REFERENCES `tbl_product`(`p_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Table structure for table `tbl_product_color`
@@ -1523,13 +1522,12 @@ INSERT INTO `tbl_shipping_cost_all` (`sca_id`, `amount`) VALUES
 -- --------------------------------------------------------
 -- Shipping Information Table for Tracking
 CREATE TABLE `tbl_shipping_info` (
-  `shipping_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `order_id` INT(11) NOT NULL,
-  `tracking_number` VARCHAR(100) NOT NULL,
-  `carrier` VARCHAR(100) NOT NULL,
-  `status` VARCHAR(50) DEFAULT 'In Transit',
-  `estimated_arrival` DATE DEFAULT NULL,
-  FOREIGN KEY (`order_id`) REFERENCES `tbl_order`(`id`) ON DELETE CASCADE
+  `shipping_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `tracking_number` varchar(100) NOT NULL,
+  `carrier` varchar(100) NOT NULL,
+  `status` varchar(50) DEFAULT 'In Transit',
+  `estimated_arrival` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
