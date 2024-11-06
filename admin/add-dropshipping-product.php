@@ -1,5 +1,5 @@
 <?php
-// Start session to store the token
+// Start session to store the token and rate limit data
 session_start();
 
 // Include configuration file
@@ -8,6 +8,9 @@ include 'inc/config.php';
 // API credentials for CJ Dropshipping
 $email = 'phemcodejay@gmail.com';
 $password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // Replace with your actual password
+
+// Define rate limit constants
+define('RATE_LIMIT_INTERVAL', 300); // 300 seconds = 5 minutes
 
 // Function to get the access token using email and password
 function getAccessToken($email, $password) {
@@ -33,6 +36,24 @@ function getAccessToken($email, $password) {
     return json_decode($result, true);
 }
 
+// Function to handle rate limiting
+function checkRateLimit() {
+    // Check if the last request time is set
+    if (isset($_SESSION['last_request_time'])) {
+        $timeSinceLastRequest = time() - $_SESSION['last_request_time'];
+
+        if ($timeSinceLastRequest < RATE_LIMIT_INTERVAL) {
+            // Wait for the remaining time to pass
+            $waitTime = RATE_LIMIT_INTERVAL - $timeSinceLastRequest;
+            echo "Rate limit exceeded. Waiting for {$waitTime} seconds before making the next request...\n";
+            sleep($waitTime); // Sleep for the remaining time
+        }
+    }
+
+    // Update the last request time
+    $_SESSION['last_request_time'] = time();
+}
+
 // Example usage: replace these with your credentials
 $email = 'phemcodejay@gmail.com';
 $password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c';
@@ -46,49 +67,18 @@ if (isset($response['data'])) {
     echo "Refresh Token: " . $refreshToken . "\n";
 
     // You may want to store the access token and refresh token for future use
-    $_SESSION['accessToken'] = $accessToken;
-    $_SESSION['refreshToken'] = $refreshToken;
+    $_SESSION['access_token'] = $accessToken;
+    $_SESSION['refresh_token'] = $refreshToken;
 } else {
     // Handle error
     echo "Error retrieving access token: " . json_encode($response) . "\n";
 }
 
-// Function to refresh the access token using the refresh token
-function refreshAccessToken($refreshToken) {
-    $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/refreshAccessToken';
-    $data = json_encode(['refreshToken' => $refreshToken]);
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-    $result = curl_exec($ch);
-    curl_close($ch);
-
-    return json_decode($result, true);
-}
-
-// Retrieve and store tokens in session
-$token = getAccessToken($email, $password);
-
-if (isset($token['access_token'])) {
-    $_SESSION['access_token'] = $token['access_token'];
-    $_SESSION['refresh_token'] = $token['refresh_token'] ?? null;
-} else {
-    die("Error retrieving access token: " . json_encode($token));
-}
-
-// Function to add a product to the database
-function addProduct($name, $description, $price, $productUrl, $imageUrl, $conn) {
-    $query = "INSERT INTO tbl_product (name, description, price, source_url, image_url, vendor_name, inventory_sync) 
-              VALUES ('$name', '$description', '$price', '$productUrl', '$imageUrl', 'CJ Dropshipping', 1)";
-    return mysqli_query($conn, $query);
-}
-
-// Function to call the CJ API
+// Function to call the CJ API with rate limit check
 function callApi($url, $data = [], $accessToken = '', $method = 'POST') {
+    // Check and handle rate limit before making the API call
+    checkRateLimit();
+
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -103,11 +93,11 @@ function callApi($url, $data = [], $accessToken = '', $method = 'POST') {
 
     $result = curl_exec($ch);
     curl_close($ch);
-    
+
     return json_decode($result, true);
 }
 
-// Function to fetch product list from CJ Dropshipping
+// Example function to fetch product list
 function getProductList($accessToken) {
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/product/list';
     return callApi($url, [], $accessToken, 'POST');
