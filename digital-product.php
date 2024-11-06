@@ -1,16 +1,30 @@
 <?php
 // Include database configuration
-require_once __DIR__ . '/inc/config.php';
+require_once __DIR__ . '/admin/inc/config.php';
 
-// Query to fetch digital products
-$query = "SELECT * FROM tbl_digital_products WHERE is_digital = 1";
-$result = mysqli_query($conn, $query);
+try {
+    // Query to fetch digital products
+    $query = "SELECT * FROM tbl_digital_products WHERE is_digital = 1";
+    $stmt = $pdo->query($query);
 
-// Check if products are available
-if (!$result) {
-    echo "Error fetching products: " . mysqli_error($conn);
+    // Fetch all products
+    $digitalProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Check if products are available
+    if (!$digitalProducts) {
+        echo "No digital products found.";
+    } else {
+        // Process the products if needed
+        foreach ($digitalProducts as $product) {
+            // Handle each product as required
+            // Example: echo $product['product_name'];
+        }
+    }
+} catch (PDOException $exception) {
+    echo "Error fetching products: " . $exception->getMessage();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

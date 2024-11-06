@@ -414,6 +414,12 @@ CREATE TABLE `tbl_digital_products` (
   `is_digital` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `tbl_digital_products` (`name`, `description`, `price`, `file_url`, `is_digital`) VALUES
+('Crypto Made Simple', 'The Essential Guide to
+Digital Wealth', 9.99, 'uploads/files/Crypto Made Simple.pdf', TRUE),
+('Essential-Trading-Guide', 'Essential-Trading-Guide', 9.99, 'uploads/files/Essential-Trading-Guide.pdf', TRUE),
+
+
 -- --------------------------------------------------------
 
 --
