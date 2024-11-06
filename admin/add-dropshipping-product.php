@@ -6,6 +6,7 @@ include 'inc/config.php';
 $errorMessage = "";
 $successMessage = "";
 
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data

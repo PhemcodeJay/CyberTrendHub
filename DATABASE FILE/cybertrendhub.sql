@@ -405,27 +405,7 @@ CREATE TABLE `tbl_customer_message` (
 -- Table structure for table `tbl_digital_products`
 --
 
-CREATE TABLE `tbl_digital_products` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `file_url` varchar(255) NOT NULL,
-  `is_digital` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-INSERT INTO `tbl_digital_products` (`name`, `description`, `price`, `file_url`, `is_digital`) VALUES
-('Crypto Made Simple', 'The Essential Guide to
-Digital Wealth', 9.99, 'uploads/files/Crypto Made Simple.pdf', TRUE),
-('Essential-Trading-Guide', 'Essential-Trading-Guide', 9.99, 'uploads/files/Essential-Trading-Guide.pdf', TRUE),
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_end_category`
---
-
+-- First, create the tables
 CREATE TABLE `tbl_end_category` (
   `ecat_id` int(11) NOT NULL,
   `ecat_name` varchar(255) NOT NULL,
@@ -515,6 +495,23 @@ INSERT INTO `tbl_end_category` (`ecat_id`, `ecat_name`, `mcat_id`) VALUES
 (77, 'Baby and Child Care', 17),
 (78, 'Household Supplies', 17),
 (79, 'Stationery and Gift Wrapping Supplies', 17);
+
+-- --------------------------------------------------------
+CREATE TABLE `tbl_digital_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `file_url` varchar(255) NOT NULL,
+  `is_digital` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Then, insert data into `tbl_digital_products`
+INSERT INTO `tbl_digital_products` (`name`, `description`, `price`, `file_url`, `is_digital`) VALUES
+('Crypto Made Simple', 'The Essential Guide to Digital Wealth', 9.99, 'uploads/files/Crypto Made Simple.pdf', TRUE),
+('Essential-Trading-Guide', 'Essential Trading Guide', 9.99, 'uploads/files/Essential-Trading-Guide.pdf', TRUE);
+
 
 -- --------------------------------------------------------
 

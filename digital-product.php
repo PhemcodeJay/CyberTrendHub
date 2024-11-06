@@ -89,26 +89,24 @@ try {
 <h1>Digital Products</h1>
 
 <div class="product-list">
-    <?php
-    // Check if there are any products in the result
-    if (mysqli_num_rows($result) > 0) {
-        // Loop through the results and display each product
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo '<div class="product-card">';
-            echo '<img src="' . $row['file_url'] . '" alt="Product Image">';
-            echo '<h3>' . $row['name'] . '</h3>';
-            echo '<p>' . $row['description'] . '</p>';
-            echo '<p class="price">$' . number_format($row['price'], 2) . '</p>';
-            echo '<a href="' . $row['file_url'] . '" class="download-btn" download>Download Now</a>';
-            echo '</div>';
-        }
-    } else {
-        echo "<p>No digital products available.</p>";
+<?php
+// Check if there are any products in the result
+if (!empty($digitalProducts)) {
+    // Loop through the results and display each product
+    foreach ($digitalProducts as $row) {
+        echo '<div class="product-card">';
+        echo '<img src="' . htmlspecialchars($row['file_url']) . '" alt="Product Image">';
+        echo '<h3>' . htmlspecialchars($row['name']) . '</h3>';
+        echo '<p>' . htmlspecialchars($row['description']) . '</p>';
+        echo '<p class="price">$' . number_format($row['price'], 2) . '</p>';
+        echo '<a href="' . htmlspecialchars($row['file_url']) . '" class="download-btn" download>Download Now</a>';
+        echo '</div>';
     }
+} else {
+    echo "<p>No digital products available.</p>";
+}
+?>
 
-    // Close the database connection
-    mysqli_close($conn);
-    ?>
 </div>
 
 </body>
