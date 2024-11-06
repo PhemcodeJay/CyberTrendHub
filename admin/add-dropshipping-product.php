@@ -12,6 +12,23 @@ $password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // Replace with your actual pass
 // Define rate limit constants
 define('RATE_LIMIT_INTERVAL', 300); // 300 seconds = 5 minutes
 
+// PDO connection settings
+$dsn = 'mysql:host=localhost;dbname=your_database_name'; // Update with your database details
+$username = 'your_db_username';
+$password = 'your_db_password';
+$options = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false,
+];
+
+// Create PDO instance
+try {
+    $conn = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+}
+
 // Function to get the access token using email and password
 function getAccessToken($email, $password) {
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken';
@@ -67,8 +84,18 @@ if (isset($response['data'])) {
     echo "Refresh Token: " . $refreshToken . "\n";
 
     // You may want to store the access token and refresh token for future use
-    $_SESSION['access_token'] = $accessToken;
-    $_SESSION['refresh_token'] = $refreshToken;
+    $_SESSION['eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxOTczMSIsInR5cGUiOiJBQ0NFU1NfVE9LRU4iLCJzdWIiOi
+            JicUxvYnFRMGxtTm55UXB4UFdMWnlpa0hoOEFVU3ErcFZGdXpKdDZlTGRiMkJBRFVOOUtXTVVPR3ViejA2TnBUU2FnajAyMnR3WEZZczBYW
+            WdMRnExWUxycHlGVmxqdzl4SXBZTi9zcXRKa05aUHNrODF4TVlaRm9LTG9GblF5WEVEQjhFM1RSM3RhVndDeFZmbjJSb3UraTVIUGNOUzMz
+            KzBBWUhqNGtqRS8wdTRnSXBvZmZ0VGhmOHY1bGVJQUYxdFhPSDFUT1dWTDJiazd3MnFMbkZ3WURNWXFzRm9sWElnMEdtQm1CbUNGNVQzcXV
+            2MWxCbkIwTVFnWjl5SDVSTFhrWFd0MWFXNzVxa3hSdXBaaXNnbndWY2tpYWpzRnZOVUV2TFNZQzYxUT0ifQ.GZLU2i3jDKp5HXEdGvaif3K
+            9p8sZnVRCEbJH0TpIVjk'] = $accessToken;
+    $_SESSION['eyJhbGciOiJIUzI1NiJ9.ey
+            JqdGkiOiIxOTczMSIsInR5cGUiOiJSRUZSRVNIX1RPS0VOIiwic3ViIjoiYnFMb2JxUTBsbU5ueVFweFBXTFp5aWtIaDhBVVNxK3BWRnV6S
+            nQ2ZUxkYjJCQURVTjlLV01VT0d1YnowNk5wVGhkekxRVWtyUHpvTFFlRmZUUmdmTmhkL1V1cjBMWjVzcnJ0OTdYMnljRTBOWlBzazgxeE1Z
+            WkZvS0xvRm5ReVhFREI4RTNUUjN0YVZ3Q3hWZm4yUm91K2k1SFBjTlMzMyswQVlIajRrakUvMHU0Z0lwb2ZmdFRoZjh2NWxlSUFGMXRYT0g
+            xVE9XVkwyYms3dzJxTG5Gd1lETVlxc0ZvbFhJZzBHbUJtQm1DRjVUM3F1djFsQm5CME1RZ1o5eUg1UkxYa1hXdDFhVzc1cWt4UnVwWmlzZ2
+            53VmNraWFqc0Z2TlVFdkxTWUM2MVE9In0.KD-PGrORs_7cFyaLQmOrHCArm2MyBXPaknMTsmVEAp0'] = $refreshToken;
 } else {
     // Handle error
     echo "Error retrieving access token: " . json_encode($response) . "\n";
@@ -103,6 +130,24 @@ function getProductList($accessToken) {
     return callApi($url, [], $accessToken, 'POST');
 }
 
+// Function to add a product to the database using PDO
+function addProduct($name, $description, $price, $productUrl, $imageUrl, $conn) {
+    // Prepare the SQL query with placeholders to avoid SQL injection
+    $query = "INSERT INTO tbl_product (name, description, price, source_url, image_url, vendor_name, inventory_sync) 
+              VALUES (:name, :description, :price, :product_url, :image_url, 'CJ Dropshipping', 1)";
+    
+    $stmt = $conn->prepare($query);
+    
+    // Bind the parameters to prevent SQL injection
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':product_url', $productUrl);
+    $stmt->bindParam(':image_url', $imageUrl);
+    
+    return $stmt->execute();
+}
+
 // Handle product addition form submission
 $errorMessage = $successMessage = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_product') {
@@ -115,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (addProduct($name, $description, $price, $productUrl, $imageUrl, $conn)) {
         $successMessage = "Product '$name' added successfully!";
     } else {
-        $errorMessage = "Error adding product to database: " . mysqli_error($conn);
+        $errorMessage = "Error adding product to database.";
     }
 }
 
@@ -124,16 +169,14 @@ $accessToken = $_SESSION['access_token'];
 $productList = getProductList($accessToken);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage CJ Dropshipping Products</title>
-    <style>
-        /* Your CSS styles */
-    </style>
-</head>
+<section class="content-header">
+    <div class="content-header-left">
+        <h1>View Products</h1>
+    </div>
+    <div class="content-header-right">
+        <a href="product-add.php" class="btn btn-primary btn-sm">Add Product</a>
+    </div>
+</section>
 <body>
 <div class="container">
     <h1>Manage CJ Dropshipping Products</h1>
