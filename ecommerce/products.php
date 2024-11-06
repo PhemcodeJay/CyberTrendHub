@@ -70,7 +70,7 @@ function getProductCategories($accessToken) {
 }
 
 // Example usage
-$accessToken = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Your access token
+$accessToken = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // Your access token
 
 // Get product detail
 $productDetail = getProductDetail('000B9312-456A-4D31-94BD-B083E2A198E8', $accessToken);

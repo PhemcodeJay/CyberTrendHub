@@ -47,8 +47,8 @@ function refreshAccessToken($refreshToken) {
 }
 
 // Example usage: replace these with your credentials
-$email = 'v0pjsw5t@linshiyouxiang.net';
-$password = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Use your actual password
+$email = 'phemcodejay@gmail.com';
+$password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // Use your actual password
 $token = getAccessToken($email, $password);
 
 if (isset($token['access_token'])) {
