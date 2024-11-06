@@ -12,22 +12,6 @@ $password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // Replace with your actual pass
 // Define rate limit constants
 define('RATE_LIMIT_INTERVAL', 300); // 300 seconds = 5 minutes
 
-// PDO connection settings
-$dsn = 'mysql:host=localhost;dbname=your_database_name'; // Update with your database details
-$username = 'your_db_username';
-$password = 'your_db_password';
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-];
-
-// Create PDO instance
-try {
-    $conn = new PDO($dsn, $username, $password, $options);
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-}
 
 // Function to get the access token using email and password
 function getAccessToken($email, $password) {
@@ -171,15 +155,18 @@ $productList = getProductList($accessToken);
 
 <section class="content-header">
     <div class="content-header-left">
-        <h1>View Products</h1>
+        <h1>CYBERTRENDHUB</h1>
     </div>
     <div class="content-header-right">
         <a href="product-add.php" class="btn btn-primary btn-sm">Add Product</a>
     </div>
 </section>
-<body>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
 <div class="container">
-    <h1>Manage CJ Dropshipping Products</h1>
+    <h1>Dropshipping Products</h1>
 
     <!-- Display messages -->
     <div class="message-container">
@@ -219,5 +206,4 @@ $productList = getProductList($accessToken);
         <?php endif; ?>
     </div>
 </div>
-</body>
-</html>
+<?php require_once('footer.php'); ?>
