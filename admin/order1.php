@@ -1,6 +1,58 @@
 <?php 
 require_once('header.php'); 
-require_once('config.php'); // Include configuration file for constants like admin email if not already included
+require_once('inc/config.php'); // Include configuration file for constants like admin email if not already included
+
+// Function to get the access token using email and password
+function getAccessToken($email, $password) {
+    $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken';
+
+    $data = json_encode([
+        'email' => $email,
+        'password' => $password,
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data),
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($result, true);
+}
+
+// Function to create a new dropshipping order (for CJ Dropshipping)
+function createDropshippingOrder($orderData, $accessToken) {
+    $url = 'https://developers.cjdropshipping.com/api2.0/v1/shopping/order/createOrderV2'; // Updated URL
+
+    $data = json_encode($orderData);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "CJ-Access-Token: $accessToken", // Updated header
+        "Content-Type: application/json",
+        'Content-Length: ' . strlen($data),
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+    $result = curl_exec($ch);
+    
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        echo 'Curl error: ' . curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    return json_decode($result, true);
+}
 
 // Process payment and order automation
 if (isset($_POST['payment_id']) && isset($_POST['cust_id'])) {
@@ -37,37 +89,48 @@ if (isset($_POST['payment_id']) && isset($_POST['cust_id'])) {
                              <b>Payment Status:</b> {$payment['payment_status']}<br>
                              <b>Shipping Status:</b> {$payment['shipping_status']}<br>";
 
-            // Include additional payment-specific details
-            if ($payment['payment_method'] === 'PayPal') {
-                $order_detail .= "<b>Transaction ID:</b> {$payment['txnid']}<br>";
-            } elseif ($payment['payment_method'] === 'Stripe') {
-                $order_detail .= "<b>Card Number:</b> {$payment['card_number']}<br>
-                                  <b>Card CVV:</b> {$payment['card_cvv']}<br>
-                                  <b>Expiry:</b> {$payment['card_month']}/{$payment['card_year']}<br>";
-            } elseif ($payment['payment_method'] === 'Bank Deposit') {
-                $order_detail .= "<b>Transaction Info:</b> {$payment['bank_transaction_info']}<br>";
-            }
-
             // Fetch order items
             $stmtOrder = $pdo->prepare("SELECT * FROM tbl_order WHERE payment_id=?");
             $stmtOrder->execute([$payment_id]);
             $order_items = $stmtOrder->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($order_items as $index => $item) {
-                $order_detail .= "<br><b>Product {$index + 1}:</b><br>
+                $order_detail .= "<br><b>Product {$index}:</b><br>
                                   Name: {$item['product_name']}<br>
                                   Size: {$item['size']}<br>
                                   Color: {$item['color']}<br>
                                   Quantity: {$item['quantity']}<br>
                                   Unit Price: {$item['unit_price']}<br>";
-                // Add tracking details for dropshipping orders
-                if ($item['tracking_number']) {
-                    $order_detail .= "<b>Tracking Number:</b> {$item['tracking_number']}<br>
-                                      <b>Carrier:</b> {$item['carrier']}<br>";
-                }
-                // Add download code for digital products
-                if ($item['download_code']) {
-                    $order_detail .= "<b>Download Code:</b> {$item['download_code']}<br>";
+                
+                // Handling dropshipping order via CJ API
+                if ($item['product_source'] === 'dropshipping') {
+                    // Example order data for CJ Dropshipping
+                    $dropshippingOrderData = [
+                        "orderNumber" => $payment['payment_id'], 
+                        "shippingZip" => $payment['shipping_zip'],
+                        "shippingCountry" => $payment['shipping_country'],
+                        "shippingPhone" => $payment['shipping_phone'],
+                        "shippingCustomerName" => $payment['customer_name'],
+                        "shippingAddress" => $payment['shipping_address'],
+                        "remark" => "Dropshipping order",
+                        "products" => [
+                            [
+                                "vid" => $item['dropshipping_product_id'], // Example product ID
+                                "quantity" => $item['quantity']
+                            ]
+                        ]
+                    ];
+
+                    // Assuming access token has been fetched previously
+                    $accessToken = getAccessToken('your-email@example.com', 'your-password')['data']['access_token']; // Update as needed
+
+                    $orderResponse = createDropshippingOrder($dropshippingOrderData, $accessToken);
+
+                    if (isset($orderResponse['code']) && $orderResponse['code'] == 200) {
+                        $order_detail .= "<br><b>Dropshipping Order ID:</b> {$orderResponse['data']['orderId']}, Status: {$orderResponse['data']['status']}<br>";
+                    } else {
+                        $order_detail .= "<br><b>Dropshipping Order Error:</b> " . json_encode($orderResponse) . "<br>";
+                    }
                 }
             }
 
