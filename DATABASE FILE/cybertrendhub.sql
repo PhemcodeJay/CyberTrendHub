@@ -1393,6 +1393,7 @@ CREATE TABLE `tbl_service` (
 
 INSERT INTO `tbl_service` (`id`, `title`, `content`, `photo`) VALUES
 (5, 'Easy Returns', 'Return any item before 15 days!', 'service-5.png'),
+(6, 'Free Shipping', 'Enjoy free shipping inside US.', 'service-6.png'),
 (7, 'Fast Shipping', 'Items are shipped within 24 hours.', 'service-7.png'),
 (8, 'Satisfaction Guarantee', 'We guarantee you with our quality satisfaction.', 'service-8.png'),
 (9, 'Secure Checkout', 'Providing Secure Checkout Options for all', 'service-9.png'),
