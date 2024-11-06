@@ -1,64 +1,29 @@
 <?php
-// Include your configuration file for database and API credentials
+// Include configuration and helper functions
 include 'inc/config.php';
 
 // Initialize messages
 $errorMessage = "";
 $successMessage = "";
 
+// Get or refresh the access token function
+function getAccessToken($email, $password) {
+    $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken';
+    $data = json_encode(['email' => $email, 'password' => $password]);
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
-    $productSource = $_POST['product_source']; // Either 'cj' or 'aliexpress'
-    $name = $_POST['name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    $productUrl = $_POST['product_url'];
-    $imageUrl = $_POST['image_url'];
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-    // API Credentials
-    $cjAccessToken = 'YOUR_CJ_ACCESS_TOKEN'; // Replace with your CJ access token
-    $aliAccessToken = 'YOUR_ALI_ACCESS_TOKEN'; // Replace with your AliExpress access token
+    $result = curl_exec($ch);
+    curl_close($ch);
 
-    if ($productSource === 'cj') {
-        // Add product to CJ Dropshipping
-        $url = "https://developers.cjdropshipping.com/api2.0/v1/product/add"; // Adjust as per the CJ API documentation
-        $data = [
-            'name' => $name,
-            'description' => $description,
-            'price' => $price,
-            'url' => $productUrl,
-            'image_url' => $imageUrl,
-            // Add other necessary fields according to CJ API requirements
-        ];
-
-        $response = callApi($url, $data, $cjAccessToken);
-
-    } else if ($productSource === 'aliexpress') {
-        // Add product to AliExpress
-        $url = "https://api.aliexpress.com/product/add"; // Adjust as per the AliExpress API documentation
-        $data = [
-            'name' => $name,
-            'description' => $description,
-            'price' => $price,
-            'url' => $productUrl,
-            'image_url' => $imageUrl,
-            // Add other necessary fields according to AliExpress API requirements
-        ];
-
-        $response = callApi($url, $data, $aliAccessToken);
-    }
-
-    // Process the API response
-    if (isset($response['success']) && $response['success']) {
-        $successMessage = "Product added successfully!";
-    } else {
-        $errorMessage = "Error adding product: " . ($response['message'] ?? 'Unknown error');
-    }
+    return json_decode($result, true);
 }
 
-// Function to call API
+// Call API with a token function
 function callApi($url, $data, $accessToken) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -68,10 +33,65 @@ function callApi($url, $data, $accessToken) {
     ]);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
     $result = curl_exec($ch);
     curl_close($ch);
 
     return json_decode($result, true);
+}
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form data
+    $productSource = $_POST['product_source']; // 'cj' or 'aliexpress'
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+    $productUrl = $_POST['product_url'];
+    $imageUrl = $_POST['image_url'];
+
+    // Use credentials from a secure place
+    $email = 'phemcodejay@gmail.com'; // CJ email
+    $password = '42667d2d1d1a4dd7bb1f563b8eb7fc8c'; // CJ password
+
+    // Get access token
+    $tokenData = getAccessToken($email, $password);
+    $accessToken = $tokenData['access_token'] ?? null;
+
+    if (!$accessToken) {
+        $errorMessage = "Error retrieving access token: " . json_encode($tokenData);
+    } else {
+        // Set API endpoint and data based on product source
+        if ($productSource === 'cj') {
+            $url = "https://developers.cjdropshipping.com/api2.0/v1/product/add";
+            $data = [
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'url' => $productUrl,
+                'image_url' => $imageUrl,
+            ];
+        } else {
+            $url = "https://api.aliexpress.com/product/add";
+            $data = [
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'url' => $productUrl,
+                'image_url' => $imageUrl,
+            ];
+        }
+
+        // Add product via API
+        $response = callApi($url, $data, $accessToken);
+
+        // Process the response
+        if (isset($response['success']) && $response['success']) {
+            $successMessage = "Product added successfully!";
+        } else {
+            $errorMessage = "Error adding product: " . ($response['message'] ?? 'Unknown error');
+        }
+    }
 }
 ?>
 
@@ -82,53 +102,19 @@ function callApi($url, $data, $accessToken) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Dropshipping Product</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
-        }
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            color: #d9534f; /* Error color */
-        }
-        .success {
-            color: #5cb85c; /* Success color */
-        }
+        /* Basic styling */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        form { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); max-width: 400px; margin: auto; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0 15px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        .message { margin: 10px 0; padding: 10px; color: #d9534f; }
+        .success { color: #5cb85c; }
     </style>
 </head>
 <body>
     <h1>Add Dropshipping Product</h1>
-    
+
     <?php if ($errorMessage): ?>
         <div class="message"><?= htmlspecialchars($errorMessage) ?></div>
     <?php endif; ?>
