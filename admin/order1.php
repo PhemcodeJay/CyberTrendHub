@@ -1,4 +1,5 @@
 <?php require_once('header.php'); ?>
+
 <?php
 // Function to get the access token using email and password
 function getAccessToken($email, $password) {
