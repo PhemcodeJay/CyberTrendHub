@@ -6,12 +6,12 @@ session_start();
 include 'inc/config.php';
 
 // Define rate limit constants
-define('RATE_LIMIT_INTERVAL', 300);
+define('RATE_LIMIT_INTERVAL', 300); // 5 minutes
 
 // PDO connection settings
-$dsn = 'mysql:host=db5016602507.hosting-data.io;dbname=dbs13461311';
-$username = 'dbu3393405';
-$password = 'Kokochulo1.';
+$dsn = 'mysql:localhost;dbname=cybertrendhub';
+$username = 'root';
+$password = '';
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -21,8 +21,10 @@ try {
     $conn = new PDO($dsn, $username, $password, $options);
 } catch (PDOException $e) {
     echo 'Connection failed: ' . $e->getMessage();
+    exit;
 }
 
+// Function to get an access token
 function getAccessToken() {
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken';
     $data = json_encode([
@@ -45,6 +47,7 @@ function getAccessToken() {
     return json_decode($result, true);
 }
 
+// Function to make API requests
 function callApi($url, $accessToken = '') {
     if (isset($_SESSION['last_request_time'])) {
         $timeSinceLastRequest = time() - $_SESSION['last_request_time'];
@@ -67,6 +70,7 @@ function callApi($url, $accessToken = '') {
     return json_decode($result, true);
 }
 
+// Fetch access token
 $accessTokenResponse = getAccessToken();
 if (isset($accessTokenResponse['data']['accessToken'])) {
     $accessToken = $accessTokenResponse['data']['accessToken'];
@@ -79,7 +83,6 @@ if (isset($accessTokenResponse['data']['accessToken'])) {
     // Fetch Product List
     $productListResponse = callApi('https://developers.cjdropshipping.com/api2.0/v1/product/list', $accessToken);
     $productList = $productListResponse['data'] ?? [];
-
 } else {
     echo "Error fetching access token: " . json_encode($accessTokenResponse);
     exit;

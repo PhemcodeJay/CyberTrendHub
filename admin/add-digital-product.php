@@ -22,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Create unique file paths using product name
             $targetDir = "uploads/files/";
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
             $filePath = $targetDir . $name . "_" . basename($file['name']);
             $imagePath = $targetDir . $name . "_" . basename($image['name']);
 
@@ -38,8 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->bindParam(':is_digital', $is_digital, PDO::PARAM_INT);
 
                     if ($stmt->execute()) {
-                        $successMessage = "Digital product with image uploaded successfully.";
-                    } else {
+                        // Redirect to digital-product.php on successful upload
+                        header("Location: /cybertrendhub/digital-product.php");
+                        exit; // Ensure no further code is executed after redirection
+                    }
+                     else {
                         $errorMessage = "Error inserting data into the database.";
                     }
                 } catch (PDOException $e) {
@@ -64,7 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: url('https://example.com/tech-image.jpg') no-repeat center center fixed;
+            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -74,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .container {
             max-width: 600px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);

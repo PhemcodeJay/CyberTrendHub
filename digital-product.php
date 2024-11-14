@@ -13,10 +13,14 @@ try {
     $stmt = $pdo->query("SELECT * FROM tbl_digital_products WHERE is_digital = 1");
     $digital_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Dummy user ID for demonstration, replace with actual user session ID
+    $user_id = 1;
+
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,6 +84,13 @@ try {
     <div class="row">
         <?php if(!empty($digital_products)): ?>
             <?php foreach ($digital_products as $product): ?>
+                <?php
+                // Check payment status for each product
+                $product_id = $product['id'];
+                $paymentCheckStmt = $pdo->prepare("SELECT * FROM tbl_payment WHERE user_id = :user_id AND product_id = :product_id AND status = 'completed'");
+                $paymentCheckStmt->execute(['user_id' => $user_id, 'product_id' => $product_id]);
+                $is_paid = $paymentCheckStmt->rowCount() > 0;
+                ?>
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm product-card">
                         <img src="<?= htmlspecialchars($product['product_image']) ?>" class="card-img-top" alt="Product Image">
@@ -87,9 +98,15 @@ try {
                             <h5 class="card-title"><?= htmlspecialchars($product['name']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($product['description']) ?></p>
                             <h6 class="text-success">$<?= number_format($product['price'], 2) ?></h6>
-                            <a href="<?= htmlspecialchars($product['file_url']) ?>" class="btn btn-primary" download>
-                                <i class="fas fa-download"></i> Download
-                            </a>
+                            <?php if ($is_paid): ?>
+                                <a href="<?= htmlspecialchars($product['file_url']) ?>" class="btn btn-primary" download>
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            <?php else: ?>
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="fas fa-lock"></i> Payment Required
+                                </button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

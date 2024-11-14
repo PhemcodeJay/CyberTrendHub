@@ -24,7 +24,7 @@ function makeCurlRequest($url, $headers = [], $data = null, $method = 'POST') {
     return json_decode($result, true);
 }
 
-// Function to refresh the access token using the refresh token
+// Refresh Access Token if needed
 function refreshAccessToken($refreshToken) {
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/refreshAccessToken';
     $data = json_encode(['refreshToken' => $refreshToken]);
@@ -33,7 +33,7 @@ function refreshAccessToken($refreshToken) {
     return makeCurlRequest($url, $headers, $data);
 }
 
-// Function to get product details by product ID
+// Get product details by product ID
 function getProductDetail($productId, $accessToken) {
     $url = "https://developers.cjdropshipping.com/api2.0/v1/product/query?pid=$productId";
     $headers = ["CJ-Access-Token: $accessToken"];
@@ -41,7 +41,7 @@ function getProductDetail($productId, $accessToken) {
     return makeCurlRequest($url, $headers, null, 'GET');
 }
 
-// Function to get the list of products
+// Get list of products
 function getProductList($accessToken) {
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/product/list';
     $headers = ["CJ-Access-Token: $accessToken"];
@@ -49,66 +49,14 @@ function getProductList($accessToken) {
     return makeCurlRequest($url, $headers, null, 'GET');
 }
 
-// Function to get product categories
-function getProductCategories($accessToken) {
-    $url = 'https://developers.cjdropshipping.com/api2.0/v1/product/getCategory';
-    $headers = ["CJ-Access-Token: $accessToken"];
+// Access tokens
+$accessToken = 'your_access_token_here'; // Replace with actual access token
+$refreshToken = 'your_refresh_token_here'; // Replace with actual refresh token
 
-    return makeCurlRequest($url, $headers, null, 'GET');
-}
-
-// Example usage: replace these with your access and refresh tokens
-$accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxOTczMSIsInR5cGUiOiJBQ0NFU1NfVE9LRU4iLCJzdWIiOi
-            JicUxvYnFRMGxtTm55UXB4UFdMWnlpa0hoOEFVU3ErcFZGdXpKdDZlTGRiMkJBRFVOOUtXTVVPR3ViejA2TnBUU2FnajAyMnR3WEZZczBYW
-            WdMRnExWUxycHlGVmxqdzl4SXBZTi9zcXRKa05aUHNrODF4TVlaRm9LTG9GblF5WEVEQjhFM1RSM3RhVndDeFZmbjJSb3UraTVIUGNOUzMz
-            KzBBWUhqNGtqRS8wdTRnSXBvZmZ0VGhmOHY1bGVJQUYxdFhPSDFUT1dWTDJiazd3MnFMbkZ3WURNWXFzRm9sWElnMEdtQm1CbUNGNVQzcXV
-            2MWxCbkIwTVFnWjl5SDVSTFhrWFd0MWFXNzVxa3hSdXBaaXNnbndWY2tpYWpzRnZOVUV2TFNZQzYxUT0ifQ.GZLU2i3jDKp5HXEdGvaif3K
-            9p8sZnVRCEbJH0TpIVjk';  // Use your actual access token
-$refreshToken = 'eyJhbGciOiJIUzI1NiJ9.ey
-            JqdGkiOiIxOTczMSIsInR5cGUiOiJSRUZSRVNIX1RPS0VOIiwic3ViIjoiYnFMb2JxUTBsbU5ueVFweFBXTFp5aWtIaDhBVVNxK3BWRnV6S
-            nQ2ZUxkYjJCQURVTjlLV01VT0d1YnowNk5wVGhkekxRVWtyUHpvTFFlRmZUUmdmTmhkL1V1cjBMWjVzcnJ0OTdYMnljRTBOWlBzazgxeE1Z
-            WkZvS0xvRm5ReVhFREI4RTNUUjN0YVZ3Q3hWZm4yUm91K2k1SFBjTlMzMyswQVlIajRrakUvMHU0Z0lwb2ZmdFRoZjh2NWxlSUFGMXRYT0g
-            xVE9XVkwyYms3dzJxTG5Gd1lETVlxc0ZvbFhJZzBHbUJtQm1DRjVUM3F1djFsQm5CME1RZ1o5eUg1UkxYa1hXdDFhVzc1cWt4UnVwWmlzZ2
-            53VmNraWFqc0Z2TlVFdkxTWUM2MVE9In0.KD-PGrORs_7cFyaLQmOrHCArm2MyBXPaknMTsmVEAp0';  // Use your actual refresh token
-
-echo "Access Token: " . $accessToken . "\n";
-echo "Refresh Token: " . $refreshToken . "\n";
-
-// Example of refreshing the token (only needed when the access token expires)
-if (isset($refreshToken)) {
-    $newToken = refreshAccessToken($refreshToken);
-    if (isset($newToken['access_token'])) {
-        $accessToken = $newToken['access_token'];
-        echo "New Access Token: " . $accessToken . "\n";
-    } else {
-        echo "Error refreshing access token: " . json_encode($newToken) . "\n";
-    }
-}
-
-// Example: Get product details, list, and categories
-$productDetail = getProductDetail('000B9312-456A-4D31-94BD-B083E2A198E8', $accessToken);
-if (isset($productDetail['name'], $productDetail['description'], $productDetail['price'])) {
-    echo "Product Name: {$productDetail['name']}, Description: {$productDetail['description']}, Price: {$productDetail['price']}\n";
-} else {
-    echo "Error retrieving product details: " . json_encode($productDetail) . "\n";
-}
-
-$products = getProductList($accessToken);
-if (isset($products['data'])) {
-    foreach ($products['data'] as $product) {
-        echo "Product ID: {$product['id']}, Name: {$product['name']}, Price: {$product['price']}\n";
-    }
-} else {
-    echo "Error retrieving product list: " . json_encode($products) . "\n";
-}
-
-$categories = getProductCategories($accessToken);
-if (isset($categories['data'])) {
-    foreach ($categories['data'] as $category) {
-        echo "Category ID: {$category['id']}, Name: {$category['name']}\n";
-    }
-} else {
-    echo "Error retrieving product categories: " . json_encode($categories) . "\n";
+// Refresh access token if expired
+$newTokenData = refreshAccessToken($refreshToken);
+if (isset($newTokenData['access_token'])) {
+    $accessToken = $newTokenData['access_token'];
 }
 
 // Fetch local products from the database
@@ -120,18 +68,15 @@ JOIN tbl_end_category t2 ON t1.ecat_id = t2.ecat_id
 JOIN tbl_mid_category t3 ON t2.mcat_id = t3.mcat_id
 JOIN tbl_top_category t4 ON t3.tcat_id = t4.tcat_id
 ORDER BY t1.p_id DESC");
-
 $statement->execute();
 $localProducts = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch dropshipping product data
+// Fetch dropshipping products
 $dropshippingProducts = [];
-if ($accessToken) {
-    $dropshippingData = getProductList($accessToken);
-    $dropshippingProducts = $dropshippingData['data'] ?? [];
+$dropshippingData = getProductList($accessToken);
+if (isset($dropshippingData['data'])) {
+    $dropshippingProducts = $dropshippingData['data'];
 }
-
-
 ?>
 
 <section class="content-header">
@@ -180,10 +125,10 @@ if ($accessToken) {
                                     <td>$<?php echo $row['p_current_price']; ?></td>
                                     <td><?php echo $row['p_qty']; ?></td>
                                     <td>
-                                        <?php echo $row['p_is_featured'] == 1 ? '<span class="badge badge-success" style="background-color:green;">Yes</span>' : '<span class="badge badge-danger" style="background-color:red;">No</span>'; ?>
+                                        <?php echo $row['p_is_featured'] == 1 ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>'; ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['p_is_active'] == 1 ? '<span class="badge badge-success" style="background-color:green;">Yes</span>' : '<span class="badge badge-danger" style="background-color:red;">No</span>'; ?>
+                                        <?php echo $row['p_is_active'] == 1 ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>'; ?>
                                     </td>
                                     <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
                                     <td>
@@ -208,10 +153,10 @@ if ($accessToken) {
                                     <td>$<?php echo $product['price']; ?></td>
                                     <td>N/A</td>
                                     <td>
-                                        <span class="badge badge-warning" style="background-color:yellow;">Dropship</span>
+                                        <span class="badge badge-warning">Dropship</span>
                                     </td>
                                     <td>
-                                        <span class="badge badge-success" style="background-color:green;">Yes</span>
+                                        <span class="badge badge-success">Yes</span>
                                     </td>
                                     <td><?php echo $product['category_name']; ?></td>
                                     <td>
