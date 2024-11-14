@@ -57,7 +57,7 @@ function callApi($url, $accessToken = '') {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer $accessToken",
+        "CJ-Access-Token: $accessToken",
         "Content-Type: application/json",
     ]);
 
@@ -72,8 +72,14 @@ if (isset($accessTokenResponse['data']['accessToken'])) {
     $accessToken = $accessTokenResponse['data']['accessToken'];
     $_SESSION['accessToken'] = $accessToken;
 
+    // Fetch Product Categories
+    $categoryResponse = callApi('https://developers.cjdropshipping.com/api2.0/v1/product/getCategory', $accessToken);
+    $categories = $categoryResponse['data'] ?? [];
+
+    // Fetch Product List
     $productListResponse = callApi('https://developers.cjdropshipping.com/api2.0/v1/product/list', $accessToken);
     $productList = $productListResponse['data'] ?? [];
+
 } else {
     echo "Error fetching access token: " . json_encode($accessTokenResponse);
     exit;
@@ -205,6 +211,15 @@ if (isset($accessTokenResponse['data']['accessToken'])) {
 <body>
     <div class="container">
         <h1>CJ Dropshipping Products</h1>
+
+        <h2>Product Categories</h2>
+        <div class="category-list">
+            <?php foreach ($categories as $category): ?>
+                <p><?= htmlspecialchars($category['name']) ?></p>
+            <?php endforeach; ?>
+        </div>
+
+        <h2>Product List</h2>
         <div class="product-list">
             <?php if (!empty($productList)): ?>
                 <?php foreach ($productList as $product): ?>

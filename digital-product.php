@@ -1,113 +1,105 @@
 <?php
-// Include database configuration
-require_once __DIR__ . '/admin/inc/config.php';
+// Database connection
+$hostname = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'cybertrendhub';
 
 try {
-    // Query to fetch digital products
-    $query = "SELECT * FROM tbl_digital_products WHERE is_digital = 1";
-    $stmt = $pdo->query($query);
+    $pdo = new PDO("mysql:host=$hostname;dbname=$database;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Fetch all products
-    $digitalProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Fetch digital products
+    $stmt = $pdo->query("SELECT * FROM tbl_digital_products WHERE is_digital = 1");
+    $digital_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Check if products are available
-    if (!$digitalProducts) {
-        echo "No digital products found.";
-    } else {
-        // Process the products if needed
-        foreach ($digitalProducts as $product) {
-            // Handle each product as required
-            // Example: echo $product['product_name'];
-        }
-    }
-} catch (PDOException $exception) {
-    echo "Error fetching products: " . $exception->getMessage();
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Products</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Inline CSS for styling */
         body {
+            background-color: #f5f8fa;
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
         }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
+        h1 {
+            font-weight: bold;
+            color: #007bff;
         }
         .product-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin: 10px;
-            padding: 15px;
-            width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            transition: transform 0.3s ease-in-out;
         }
-        .product-card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
-        .product-card h3 {
-            margin: 15px 0 10px;
-            font-size: 18px;
+        .card-img-top {
+            max-height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #007bff;
         }
-        .product-card p {
-            color: #555;
-            font-size: 14px;
-        }
-        .product-card .price {
-            font-size: 16px;
+        .card-title {
+            font-size: 1.25rem;
             font-weight: bold;
-            color: #27a745;
+            color: #333;
         }
-        .product-card .download-btn {
-            display: inline-block;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            margin-top: 10px;
+        .card-text {
+            font-size: 0.9rem;
+            color: #555;
         }
-        .product-card .download-btn:hover {
-            background-color: #0056b3;
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .text-success {
+            color: #28a745 !important;
         }
     </style>
 </head>
 <body>
 
-<h1>Digital Products</h1>
-
-<div class="product-list">
-<?php
-// Check if there are any products in the result
-if (!empty($digitalProducts)) {
-    // Loop through the results and display each product
-    foreach ($digitalProducts as $row) {
-        echo '<div class="product-card">';
-        echo '<img src="' . htmlspecialchars($row['file_url']) . '" alt="Product Image">';
-        echo '<h3>' . htmlspecialchars($row['name']) . '</h3>';
-        echo '<p>' . htmlspecialchars($row['description']) . '</p>';
-        echo '<p class="price">$' . number_format($row['price'], 2) . '</p>';
-        echo '<a href="' . htmlspecialchars($row['file_url']) . '" class="download-btn" download>Download Now</a>';
-        echo '</div>';
-    }
-} else {
-    echo "<p>No digital products available.</p>";
-}
-?>
-
+<div class="container my-5">
+    <h1 class="text-center text-primary mb-4">Our Digital Products</h1>
+    <div class="row">
+        <?php if(!empty($digital_products)): ?>
+            <?php foreach ($digital_products as $product): ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm product-card">
+                        <img src="<?= htmlspecialchars($product['product_image']) ?>" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-center">
+                            <h5 class="card-title"><?= htmlspecialchars($product['name']) ?></h5>
+                            <p class="card-text"><?= htmlspecialchars($product['description']) ?></p>
+                            <h6 class="text-success">$<?= number_format($product['price'], 2) ?></h6>
+                            <a href="<?= htmlspecialchars($product['file_url']) ?>" class="btn btn-primary" download>
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-center">No digital products available at the moment.</p>
+        <?php endif; ?>
+    </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
