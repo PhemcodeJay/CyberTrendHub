@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMessage = "Error uploading files. Error codes: File - " . $file['error'] . ", Image - " . $image['error'];
         } else {
             // Create unique file paths using product name
-            $targetDir = "uploads/files/";
+            $targetDir = "uploads/files/digital-product/";
             if (!is_dir($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($stmt->execute()) {
                         // Redirect to digital-product.php on successful upload
-                        header("Location: /cybertrendhub/digital-product.php");
+                        header("Location: /digital-product.php");
                         exit; // Ensure no further code is executed after redirection
                     }
                      else {

@@ -1,9 +1,7 @@
 <?php
 // Database connection details
-$hostname = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'cybertrendhub';
+// Include the database configuration file
+include 'admin/inc/config.php';
 
 try {
     // Establish a database connection
@@ -123,7 +121,7 @@ try {
         // This would be replaced with actual payment success check
         setTimeout(function() {
             document.getElementById('download-btn-' + productId).style.display = 'inline-block';
-        }, 3000);  // Simulate payment success after 3 seconds
+        }, 300000);  // Simulate payment success after 300 seconds
     }
 </script>
 

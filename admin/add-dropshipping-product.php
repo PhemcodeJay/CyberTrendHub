@@ -8,21 +8,6 @@ include 'inc/config.php';
 // Define rate limit constants
 define('RATE_LIMIT_INTERVAL', 300); // 5 minutes
 
-// PDO connection settings
-$dsn = 'mysql:localhost;dbname=cybertrendhub';
-$username = 'root';
-$password = '';
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
-try {
-    $conn = new PDO($dsn, $username, $password, $options);
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-    exit;
-}
 
 // Function to get an access token
 function getAccessToken() {

@@ -105,6 +105,7 @@ if (isset($dropshippingData['data'])) {
                                 <th>Featured?</th>
                                 <th>Active?</th>
                                 <th>Category</th>
+                                <th>Product Type</th>
                                 <th width="80">Action</th>
                             </tr>
                         </thead>
@@ -130,6 +131,7 @@ if (isset($dropshippingData['data'])) {
                                     <td>
                                         <?php echo $row['p_is_active'] == 1 ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-danger">No</span>'; ?>
                                     </td>
+                                    <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
                                     <td><?php echo $row['tcat_name']; ?><br><?php echo $row['mcat_name']; ?><br><?php echo $row['ecat_name']; ?></td>
                                     <td>
                                         <a href="product-edit.php?id=<?php echo $row['p_id']; ?>" class="btn btn-primary btn-xs">Edit</a>

@@ -2,30 +2,27 @@
 // Start session to store token and rate limit data
 session_start();
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 // Include configuration file
 include 'admin/inc/config.php';
 
 // Define rate limit constants
 define('RATE_LIMIT_INTERVAL', 300); // 5 minutes
 
-// PDO connection settings
-$dsn = 'mysql:localhost;dbname=cybertrendhub';
-$username = 'root';
-$password = '';
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
 
-try {
-    $conn = new PDO($dsn, $username, $password, $options);
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-    exit;
-}
 
-// Function to get an access token
 function getAccessToken() {
+    // Check if token exists in session and is still valid
+    if (isset($_SESSION['accessToken'], $_SESSION['token_expiry']) && $_SESSION['token_expiry'] > time()) {
+        return [
+            'data' => ['accessToken' => $_SESSION['accessToken']],
+        ];
+    }
+
+    // If no valid token, fetch a new one
     $url = 'https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken';
     $data = json_encode([
         'email' => 'phemcodejay@gmail.com',
@@ -44,7 +41,15 @@ function getAccessToken() {
     $result = curl_exec($ch);
     curl_close($ch);
 
-    return json_decode($result, true);
+    $response = json_decode($result, true);
+
+    // Save token in session if successful
+    if (isset($response['data']['accessToken'])) {
+        $_SESSION['accessToken'] = $response['data']['accessToken'];
+        $_SESSION['token_expiry'] = time() + 300; // Set expiry to 5 minutes
+    }
+
+    return $response;
 }
 
 // Function to make API requests
