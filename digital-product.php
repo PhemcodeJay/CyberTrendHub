@@ -4,10 +4,7 @@
 include 'admin/inc/config.php';
 
 try {
-    // Establish a database connection
-    $pdo = new PDO("mysql:host=$hostname;dbname=$database;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    
     // Fetch digital products from tbl_digital_products
     $stmt = $pdo->query("SELECT * FROM tbl_digital_products WHERE is_digital = 1");
     $digital_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
