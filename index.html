@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+    
+  <title>Build • Learn • Trade — Like a Pro!</title>
+
+  <!-- Basic CSS + theme variables -->
+  <style>
+    :root{
+      --bg:#0d0d0d;
+      --surface:#111;
+      --card:#1c1c1c;
+      --muted:#9aa4b2;
+      --accent:#00ffcc;
+      --primary:#1976d2;
+      --whatsapp:#25D366;
+      --text:#ffffff;
+    }
+    body.light{
+      --bg:#f6f8fb;
+      --surface:#e9eef6;
+      --card:#ffffff;
+      --muted:#55606a;
+      --accent:#006b5f;
+      --primary:#0d47a1;
+      --whatsapp:#1fa94b;
+      --text:#0b1220;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      text-align:center;
+      scroll-behavior:smooth;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:120px; /* avoid floating button overlap */
+    }
+
+    a{color:inherit}
+    header{
+      background: linear-gradient(90deg, rgba(13,71,161,.95), rgba(25,118,210,.9));
+      padding:48px 20px;
+      animation:fadeIn 700ms ease;
+      position:relative;
+    }
+    header .topbar{
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+      align-items:center;
+      max-width:1100px;
+      margin:0 auto 12px;
+    }
+    .theme-toggle{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.12);
+      color:white;
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      backdrop-filter: blur(4px);
+    }
+    header h1{
+      margin:0;
+      font-size:clamp(20px,4vw,36px);
+      line-height:1.05;
+      animation:textGlow 2s ease-in-out infinite alternate;
+    }
+    header p{margin:10px 0 0; opacity:.95}
+
+    main{max-width:1100px;margin:28px auto;padding:0 16px;}
+
+    /* Ticker */
+    .ticker{
+      background:var(--surface);
+      color:var(--accent);
+      padding:8px 0;
+      overflow:hidden;
+      white-space:nowrap;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    .ticker-content{
+      display:inline-block;
+      will-change:transform;
+      padding-left:100%;
+      animation:scroll-left 30s linear infinite;
+    }
+    .ticker-content:hover{animation-play-state:paused}
+
+    @keyframes scroll-left{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-100%)}
+    }
+
+    /* Sections */
+    section{
+      padding:36px 0;
+      animation:fadeInUp 700ms ease;
+    }
+    h2{margin:0 0 18px;font-size:1.2rem}
+    .services{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:18px;
+      align-items:start;
+    }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      padding:16px;
+      text-align:left;
+      box-shadow:0 6px 18px rgba(0,0,0,0.25);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .card:hover{transform:translateY(-6px); box-shadow:0 18px 30px rgba(0,0,0,0.35)}
+    .card img{width:100%;border-radius:8px;margin-bottom:8px;display:block}
+
+    .social-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+    .social-links a{display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04); text-decoration:none}
+    .social-links a:hover{border-color:var(--accent); color:var(--accent)}
+
+    /* Book buy button */
+    .buy-btn{
+      display:inline-block;
+      background:var(--primary);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:8px;
+      text-decoration:none;
+      border:none;
+      cursor:pointer;
+      margin-top:8px;
+    }
+    .buy-btn:hover{opacity:.95}
+
+    /* Floating WA button */
+    #whatsapp-float{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:var(--whatsapp);
+      color:#fff;
+      font-size:22px;
+      padding:14px;
+      border-radius:50%;
+      box-shadow:0 8px 30px rgba(0,0,0,0.35);
+      cursor:pointer;
+      z-index:999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    #whatsapp-float:hover{transform:translateY(-3px)}
+
+    /* Slide-in popup */
+    #whatsapp-popup{
+      position:fixed;
+      bottom:20px;
+      right:-380px; /* hidden off screen */
+      width:340px;
+      max-width:calc(100% - 40px);
+      background:var(--card);
+      color:var(--text);
+      border-radius:12px;
+      box-shadow:0 18px 40px rgba(2,6,23,0.6);
+      padding:12px;
+      z-index:1000;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      transition:right .45s cubic-bezier(.2,.9,.2,1),opacity .3s;
+      opacity:0;
+    }
+    #whatsapp-popup.show{right:80px;opacity:1}
+
+    .popup-header{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 0}
+    .popup-header button{background:transparent;border:none;font-size:16px;cursor:pointer;color:var(--muted)}
+
+    #whatsapp-popup input, #whatsapp-popup textarea{
+      width:100%;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid rgba(0,0,0,0.08);
+      background:transparent;
+      color:var(--text);
+      outline:none;
+    }
+    #whatsapp-popup button[type="submit"]{
+      background:var(--whatsapp);
+      color:#fff;
+      border:none;
+      padding:10px;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    /* Small screens tweaks */
+    @media (max-width:640px){
+      header{padding:28px 16px}
+      #whatsapp-popup.show{right:20px}
+    }
+    
+    .logo {
+        max-width: 160px; /* Resize so it’s not huge */
+        width: 70%;
+        height: auto;
+        margin: 20px auto;
+        display: block;
+        animation: slideFadeIn 1.2s ease-out forwards;
+    }
+    
+    .logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #00ff99;
+    animation: typing 3s steps(20, end), blink 0.7s infinite;
+}
+
+    @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+    @keyframes blink {
+    50% { border-color: transparent }
+}
+
+    @keyframes slideFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* small animations */
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    @keyframes textGlow{
+      from{text-shadow:0 0 6px rgba(255,255,255,0.6),0 0 10px var(--accent)}
+      to{text-shadow:0 0 14px rgba(255,255,255,0.9),0 0 30px var(--accent)}
+    }
+  .modal { display: none; position: fixed; z-index: 999; padding: 20px; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+  .modal-content { background: white; padding: 20px; max-width: 600px; margin: 50px auto; border-radius: 8px; }
+  .read-more { display: inline-block; margin-top: 5px; font-size: 0.9em; color: blue; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <!-- CRYPTO TICKER (top) -->
+  <div class="ticker" aria-hidden="false">
+    <div class="ticker-content" id="crypto-ticker">Loading crypto prices...</div>
+  </div>
+
+  <!-- HERO -->
+  <header>
+    <div class="topbar">
+      <img src="images/logo.jpg" alt="cybertrendhub" class=logo>
+      <h1 class="logo-text"></h1>
+      <div style="font-size:0.9rem;opacity:.95">🐙 <strong>OL'PHEMIE JEGEDE</strong></div>
+      <button class="theme-toggle" id="themeToggle" aria-pressed="false">🌙</button>
+    </div>
+
+    <h1>🚀💻 Build • Learn • Trade — LIKE A PRO! 💻🚀</h1>
+    <p>Python 🐍 | NestJS ⚡ | PostgreSQL 🛢️ | Web Design 🎨 | Crypto Trading 💹</p>
+  </header>
+
+  <main>
+    <!-- SERVICES -->
+    <section aria-labelledby="services-heading">
+    <h2 id="services-heading">Our Expertise</h2>
+    <div class="services">
+      
+      <!-- Full-Stack Development -->
+      <div class="card">
+        🐍 <strong>Full-Stack Development</strong><br>
+        Python, NestJS, PostgreSQL, PHP, MySQL
+        <a href="#" class="read-more" data-modal="modal-dev">Read More</a>
+      </div>
+
+      <!-- Web Design -->
+      <div class="card">
+        🌐 <strong>Web Design & Websites</strong><br>
+        Modern • Responsive • Fast
+        <a href="#" class="read-more" data-modal="modal-web">Read More</a>
+      </div>
+
+      <!-- Crypto Trading -->
+      <div class="card">
+        📈 <strong>Crypto Trading Systems</strong><br>
+        Automation • Analytics • Backtesting
+        <a href="#" class="read-more" data-modal="modal-trading">Read More</a>
+      </div>
+
+      <!-- Training -->
+      <div class="card">
+        🎓 <strong>Training & Mentorship</strong><br>
+        Hands-on coding, trading & deployment
+        <a href="#" class="read-more" data-modal="modal-training">Read More</a>
+      </div>
+
+      <!-- Project Execution -->
+      <div class="card">
+        ⚡ <strong>Project Execution</strong><br>
+        From idea to deployment — done right
+        <a href="#" class="read-more" data-modal="modal-project">Read More</a>
+      </div>
+      
+    </div>
+  </section>
+
+      <!-- ===== Modals ===== -->
+      <div id="modal-dev" class="modal">
+        <div class="modal-content">
+          <h3>🐍💻 Full-Stack Development</h3>
+          <p>We craft powerful, scalable systems — from sleek, user-friendly UIs to rock-solid backend logic — using Python, NestJS, PostgreSQL, PHP, and MySQL. Your app will be fast, secure, and built to grow with you.</p>
+        </div>
+      </div>
+
+      <div id="modal-web" class="modal">
+        <div class="modal-content">
+          <h3>🌐🎨 Web Design & Websites</h3>
+          <p>We design modern, mobile-friendly websites that are lightning-fast ⚡, easy to use, and optimized for search engines — because beauty and performance should go hand in hand.</p>
+        </div>
+      </div>
+
+      <div id="modal-trading" class="modal">
+        <div class="modal-content">
+          <h3>📈🤖 Crypto Trading Systems</h3>
+          <p>We build automated & semi-automated trading platforms with live market analytics, smart indicators, backtesting tools, and deep integration with top crypto exchanges.</p>
+        </div>
+      </div>
+
+      <div id="modal-training" class="modal">
+        <div class="modal-content">
+          <h3>🎓🛠 Training & Mentorship</h3>
+          <p>Learn hands-on coding 💻, deployment, and pro-level trading strategies — guided by seasoned developers and traders who’ve been there and done it.</p>
+        </div>
+      </div>
+
+      <div id="modal-project" class="modal">
+        <div class="modal-content">
+          <h3>⚡🚀 Project Execution</h3>
+          <p>From idea 💡 to live deployment 🌍, we take care of every step — ensuring your project is delivered right, on time, and ready to shine.</p>
+        </div>
+      </div>
+
+
+
+    <!-- BOOKS -->
+    <section aria-labelledby="books-heading">
+      <h2 id="books-heading">📚 Books & Resources</h2>
+      <div class="services">
+        <div class="card">
+          <!-- replace image path with your cover path -->
+          <img src="images/crypto-made-simple.jpg" alt="Crypto Made Simple cover" style="max-width:50%;height:auto;" onerror="this.style.display='none'">
+          <h3>📘 Crypto Made Simple</h3>
+          <p>Learn crypto from the ground up — perfect for beginners & pros.</p>
+          <p><strong>Price:</strong> $9</p>
+          <a class="buy-btn" target="_blank" rel="noopener"
+             href="https://wa.me/254101674289?text=I%20want%20to%20buy%20Crypto%20Made%20Simple%20for%20$9">
+            💳 Buy Now
+          </a>
+        </div>
+
+        <div class="card">
+          <img src="images/essential-trading.jpg" alt="Essential Trading cover" style="max-width:50%;height:auto;" onerror="this.style.display='none'">
+          <h3>📕 Essential Trading</h3>
+          <p>Master the art of trading — strategies, risk management & profits.</p>
+          <p><strong>Price:</strong> $9</p>
+          <a class="buy-btn" target="_blank" rel="noopener"
+             href="https://wa.me/254101674289?text=I%20want%20to%20buy%20Essential%20Trading%20for%20$9">
+            💳 Buy Now
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL -->
+    <section aria-labelledby="connect-heading">
+      <h2 id="connect-heading">Connect With Us</h2>
+      <div class="social-links" role="navigation" aria-label="social links">
+        <a href="https://github.com/phemcodejay" target="_blank" rel="noopener">🐙 GitHub</a>
+        <a href="https://wa.me/254101674289" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a href="mailto:olphemie@gmail.com.com">📧 Email</a>
+      </div>
+    </section>
+
+    <!-- CONTACT / Info -->
+    <section aria-labelledby="contact-heading">
+      <h2 id="contact-heading">📞 Contact Us</h2>
+      <p>We’d love to hear from you! Click the WhatsApp button to open the chat or use the quick chat widget.</p>
+    </section>
+  </main>
+
+  <!-- Floating WhatsApp Button -->
+  <div id="whatsapp-float" aria-label="Open chat" title="Chat with us">
+    💬
+  </div>
+
+  <!-- Slide-in WhatsApp Popup -->
+  <div id="whatsapp-popup" role="dialog" aria-hidden="true" aria-label="WhatsApp chat form">
+    <div class="popup-header">
+      <strong>💬 Chat with Us</strong>
+      <button id="popupCloseBtn" aria-label="Close chat">✖</button>
+    </div>
+
+    <form id="waForm">
+      <input id="wa_name" type="text" placeholder="Your name" required />
+      <input id="wa_service" type="text" placeholder="Service needed" required />
+      <textarea id="wa_message" rows="3" placeholder="Your message" required></textarea>
+      <button type="submit">📲 Send to WhatsApp</button>
+    </form>
+  </div>
+
+  <!-- JS: theme, ticker, WhatsApp popup -->
+  <script>
+    (function(){
+      // ------- Configuration -------
+      const PHONE = "254101674289"; // <-- replace with your WhatsApp number (country code + number, no + or leading zeros)
+      const COINGECKO_URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false";
+
+      // ------- Theme toggle -------
+      const themeToggle = document.getElementById('themeToggle');
+      function applyTheme(theme){
+        if(theme === 'light'){
+          document.body.classList.add('light');
+          themeToggle.textContent = '☀️';
+          themeToggle.setAttribute('aria-pressed','true');
+        } else {
+          document.body.classList.remove('light');
+          themeToggle.textContent = '🌙';
+          themeToggle.setAttribute('aria-pressed','false');
+        }
+      }
+      // init from localStorage
+      const stored = localStorage.getItem('site-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      applyTheme(stored);
+      themeToggle.addEventListener('click', () => {
+        const next = document.body.classList.contains('light') ? 'dark' : 'light';
+        applyTheme(next);
+        localStorage.setItem('site-theme', next);
+      });
+
+      // ------- Crypto ticker fetch -------
+      function renderTicker(data){
+        const el = document.getElementById('crypto-ticker');
+        if(!data || !data.length){ el.textContent = 'No data'; return; }
+        // map to symbol: $price (change%)
+        const items = data.map(c => {
+          const change = (c.price_change_percentage_24h !== null && c.price_change_percentage_24h !== undefined)
+            ? ` (${c.price_change_percentage_24h.toFixed(2)}%)` : '';
+          return `${c.symbol.toUpperCase()}: $${Number(c.current_price).toLocaleString()}${change}`;
+        });
+        // duplicate content once so scroll appears continuous on wide screens
+        el.innerHTML = items.join('  •  ') + '  •  ' + items.join('  •  ');
+      }
+
+      fetch(COINGECKO_URL)
+        .then(r => r.json())
+        .then(renderTicker)
+        .catch(err => {
+          console.warn('CoinGecko error', err);
+          document.getElementById('crypto-ticker').textContent = 'Error loading crypto prices.';
+        });
+
+      // ------- WhatsApp popup behavior -------
+      const waFloat = document.getElementById('whatsapp-float');
+      const waPopup = document.getElementById('whatsapp-popup');
+      const waClose = document.getElementById('popupCloseBtn');
+      const waForm = document.getElementById('waForm');
+
+      function showPopup(show){
+        if(show){
+          waPopup.classList.add('show');
+          waPopup.setAttribute('aria-hidden','false');
+        } else {
+          waPopup.classList.remove('show');
+          waPopup.setAttribute('aria-hidden','true');
+        }
+      }
+
+      waFloat.addEventListener('click', () => showPopup(true));
+      waClose.addEventListener('click', () => showPopup(false));
+      // close when clicking outside popup
+      document.addEventListener('click', (e) => {
+        if(!waPopup.contains(e.target) && !waFloat.contains(e.target) && waPopup.classList.contains('show')){
+          showPopup(false);
+        }
+      });
+
+      waForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const name = document.getElementById('wa_name').value.trim();
+        const service = document.getElementById('wa_service').value.trim();
+        const message = document.getElementById('wa_message').value.trim();
+        if(!name || !service || !message) return;
+        const text = `Hello, my name is ${name}. I need help with: ${service}. Message: ${message}`;
+        const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`;
+        // open new tab/window (works for mobile + web)
+        window.open(url, '_blank');
+      });
+
+      // optional: auto-open popup after X seconds (disabled by default)
+      // setTimeout(()=> showPopup(true), 8000);
+    })();
+  </script>
+  <!-- Example Modal Styling & JS -->
+
+  <script>
+    document.querySelectorAll('.read-more').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const modal = document.getElementById(link.dataset.modal);
+        if (modal) modal.style.display = 'block';
+      });
+    });
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>
