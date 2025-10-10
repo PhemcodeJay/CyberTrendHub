@@ -5,44 +5,237 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cybertrendhub - Crypto Tools Marketplace</title>
   <style>
-    /* Basic CSS for tabs and layout */
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; text-align: center; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-    header { background-color: #333; color: white; padding: 20px; text-align: center; }
-    .tab-container { display: flex; justify-content: center; flex-wrap: wrap; background-color: #eee; }
-    .tab-button { padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none; outline: none; margin: 5px; border-radius: 5px; transition: background-color 0.3s; }
-    .tab-button:hover { background-color: #0056b3; }
-    .tab-button.active { background-color: #28a745; }
-    .tab-content { display: none; padding: 20px; width: 100%; animation: fadeIn 0.5s; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .product-card { border: 1px solid #ddd; padding: 15px; margin: 10px auto; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); border-radius: 8px; max-width: 600px; animation: slideIn 0.5s; }
-    .section-card { border: 1px solid #ccc; padding: 15px; margin: 10px auto; background-color: #fff; border-radius: 8px; max-width: 800px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); animation: slideIn 0.5s; }
-    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-    .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 800px; border-radius: 8px; overflow-y: auto; max-height: 80%; }
-    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
-    .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
-    .pagination { text-align: center; margin: 20px 0; }
-    .pagination button { margin: 0 5px; padding: 5px 10px; }
-    .faq-item { margin-bottom: 10px; }
-    .faq-question { cursor: pointer; font-weight: bold; }
-    .faq-answer { display: none; padding: 10px; background: #eee; border-radius: 4px; }
-    table { width: 80%; border-collapse: collapse; margin: 0 auto; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    button { cursor: pointer; padding: 10px; margin: 5px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; }
-    button:hover { background-color: #45a049; }
-    #crypto-ticker { background-color: #222; color: white; padding: 10px; font-size: 14px; overflow: hidden; white-space: nowrap; }
-    .ticker-content { display: inline-block; animation: ticker 20s linear infinite; }
-    @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    /* Add more styles as needed */
+    /* Modernized CSS with light background */
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); /* Light, blending background */
+      color: #333; 
+      text-align: center; 
+    }
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 0 20px; 
+      background: rgba(255, 255, 255, 0.97); 
+      border-radius: 10px; 
+      box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+    }
+    header { 
+      background: linear-gradient(135deg, #333, #555); 
+      color: white; 
+      padding: 30px; 
+      text-align: center; 
+      border-radius: 10px 10px 0 0; 
+    }
+    .tab-container { 
+      display: flex; 
+      justify-content: center; 
+      flex-wrap: wrap; 
+      background: #fff; 
+      padding: 10px; 
+      border-radius: 0 0 10px 10px; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+    }
+    .tab-button { 
+      padding: 12px 24px; 
+      cursor: pointer; 
+      background: linear-gradient(135deg, #007bff, #0056b3); 
+      color: white; 
+      border: none; 
+      outline: none; 
+      margin: 5px; 
+      border-radius: 25px; 
+      transition: all 0.3s ease; 
+      font-weight: bold; 
+    }
+    .tab-button:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 8px rgba(0,123,255,0.3); 
+    }
+    .tab-button.active { 
+      background: linear-gradient(135deg, #28a745, #20c997); 
+    }
+    .tab-content { 
+      display: none; 
+      padding: 30px; 
+      width: 100%; 
+      animation: fadeIn 0.5s; 
+    }
+    .tab-content.active { 
+      display: block; 
+    }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    .product-card { 
+      border: none; 
+      padding: 25px; 
+      margin: 20px auto; 
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+      border-radius: 15px; 
+      max-width: 600px; 
+      animation: slideIn 0.5s; 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+      transition: transform 0.3s ease, box-shadow 0.3s ease; 
+      cursor: pointer; 
+    }
+    .product-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 12px 35px rgba(0,0,0,0.2); 
+    }
+    .section-card { 
+      border: none; 
+      padding: 20px; 
+      margin: 15px auto; 
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+      border-radius: 12px; 
+      max-width: 800px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+      animation: slideIn 0.5s; 
+    }
+    @keyframes slideIn { 
+      from { transform: translateY(30px); opacity: 0; } 
+      to { transform: translateY(0); opacity: 1; } 
+    }
+    .modal { 
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.5); 
+      backdrop-filter: blur(5px); 
+    }
+    .modal-content { 
+      background: linear-gradient(135deg, #fff, #f8f9fa); 
+      margin: 10% auto; 
+      padding: 30px; 
+      border-radius: 15px; 
+      width: 90%; 
+      max-width: 800px; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+      overflow-y: auto; 
+      max-height: 80%; 
+    }
+    .close { 
+      color: #aaa; 
+      float: right; 
+      font-size: 35px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      transition: color 0.3s; 
+    }
+    .close:hover { 
+      color: #333; 
+    }
+    .pagination { 
+      text-align: center; 
+      margin: 30px 0; 
+    }
+    .pagination button { 
+      margin: 0 10px; 
+      padding: 10px 20px; 
+      background: linear-gradient(135deg, #007bff, #0056b3); 
+      color: white; 
+      border: none; 
+      border-radius: 25px; 
+      cursor: pointer; 
+      transition: all 0.3s; 
+    }
+    .pagination button:hover { 
+      transform: translateY(-2px); 
+    }
+    .faq-item { 
+      margin-bottom: 15px; 
+      background: white; 
+      border-radius: 10px; 
+      padding: 15px; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+      cursor: pointer; 
+    }
+    .faq-question { 
+      font-weight: bold; 
+      margin-bottom: 10px; 
+    }
+    .faq-answer { 
+      display: none; 
+      padding: 10px; 
+      background: #f8f9fa; 
+      border-radius: 8px; 
+      margin-top: 10px; 
+    }
+    button { 
+      cursor: pointer; 
+      padding: 12px 24px; 
+      margin: 10px; 
+      background: linear-gradient(135deg, #28a745, #20c997); 
+      color: white; 
+      border: none; 
+      border-radius: 25px; 
+      font-weight: bold; 
+      transition: all 0.3s; 
+    }
+    button:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(40,167,69,0.3); 
+    }
+    #crypto-ticker { 
+      background: linear-gradient(90deg, #222, #333); 
+      color: #00ff88; 
+      padding: 15px; 
+      font-size: 16px; 
+      overflow: hidden; 
+      white-space: nowrap; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+    }
+    .ticker-content { 
+      display: inline-block; 
+      animation: ticker 25s linear infinite; 
+      font-family: monospace; 
+    }
+    @keyframes ticker { 
+      0% { transform: translateX(100%); } 
+      100% { transform: translateX(-100%); } 
+    }
+    .demo-video { 
+      width: 100%; 
+      height: 300px; 
+      border-radius: 10px; 
+      margin: 20px 0; 
+    }
+    ul { 
+      text-align: left; 
+      list-style-position: inside; 
+    }
+    li { 
+      margin: 5 Mars 2026px 0; 
+    }
+    .whatsapp-chat { 
+      position: fixed; 
+      bottom: 20px; 
+      right: 20px; 
+      z-index: 1000; 
+    }
+    .whatsapp-chat img { 
+      width: 60px; 
+      cursor: pointer; 
+      transition: transform 0.3s; 
+    }
+    .whatsapp-chat img:hover { 
+      transform: scale(1.1); 
+    }
   </style>
 </head>
 <body>
 
   <div id="crypto-ticker">
-    <div class="ticker-content">BTC: $114,207 (+3.5%) | ETH: $4,184.56 (+3.6%) | SOL: $212.07 (+2.9%) | ... (Multi-exchange support coming soon)</div>
+    <div class="ticker-content" id="ticker-content">Fetching real-time crypto prices...</div>
   </div>
 
   <div class="container">
@@ -59,21 +252,22 @@
     </section>
 
     <div class="tab-container">
-      <button class="tab-button active" onclick="openTab('marketplace')">Marketplace</button>
-      <button class="tab-button" onclick="openTab('user-guide')">User Guide</button>
-      <button class="tab-button" onclick="openTab('terms')">Terms & Conditions</button>
-      <button class="tab-button" onclick="openTab('about')">About</button>
+      <button class="tab-button active" onclick="openTab('marketplace')">🛒 Marketplace</button>
+      <button class="tab-button" onclick="openTab('user-guide')">📖 User Guide</button>
+      <button class="tab-button" onclick="openTab('terms')">📋 Terms & Conditions</button>
+      <button class="tab-button" onclick="openTab('faqs')">❓ FAQs</button>
+      <button class="tab-button" onclick="openTab('about')">👨‍💻 About</button>
     </div>
 
     <div id="marketplace" class="tab-content active">
       <section>
         <h2>🚀 Marketplace — Buy with Crypto or PayPal</h2>
-        <p>Two polished dashboards — ready to download after payment. Choose NOWPayments (crypto) or PayPal (card).</p>
+        <p>Two polished dashboards — instant download after payment. Pay securely via NOWPayments (crypto) or PayPal (card). Access via email! 📧</p>
 
-        <!-- AlgoTrader Pro Modal -->
+        <!-- AlgoTrader Pro Card -->
         <div class="product-card" onclick="document.getElementById('algotraderModal').style.display='block'">
           <h3>📊 AlgoTrader Pro</h3>
-          <p>Automated trading, ML-enhanced signals, Bybit integration (multi-exchange coming soon), virtual & live modes.</p>
+          <p>Automated trading, ML-enhanced signals, Bybit integration, virtual & live modes.</p>
           <ul>
             <li>🤖 XGBoost signal filtering</li>
             <li>📈 Multi-timeframe technical analysis (15m,1h,4h)</li>
@@ -83,10 +277,13 @@
             <li>Risk Management: Position sizing based on account balance, Stop-loss and take-profit automation</li>
             <li>Notifications: Discord, Telegram, WhatsApp integration</li>
           </ul>
-          <p>Price: $49</p>
+          <p><strong>Price: $49</strong></p>
+          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=ALGOTRADER_DEMO', '_blank')">🎥 Watch Demo</button>
+          <button onclick="event.stopPropagation(); window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ALGOTRADER_PAYPAL', '_blank')">💳 Pay with PayPal</button>
+          <button onclick="event.stopPropagation(); window.open('https://nowpayments.io/payment/?iid=ALGOTRADER_CRYPTO', '_blank')">💸 Pay with Crypto</button>
         </div>
 
-        <!-- DeFi Vault Pro Modal -->
+        <!-- DeFi Vault Pro Card -->
         <div class="product-card" onclick="document.getElementById('defiModal').style.display='block'">
           <h3>🌐 DeFi Vault Pro</h3>
           <p>Multi-chain DeFi scanner with wallet simulation, real-time APY tracking & integrations.</p>
@@ -99,85 +296,103 @@
             <li>Multi-Chain Support: Ethereum, BSC, Arbitrum, Optimism, Base, Avalanche, Neon EVM</li>
             <li>Smart Contract Integration: Aave, Compound, Uniswap</li>
           </ul>
-          <p>Price: $59</p>
+          <p><strong>Price: $59</strong></p>
+          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=DEFI_VAULT_DEMO', '_blank')">🎥 Watch Demo</button>
+          <button onclick="event.stopPropagation(); window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEFI_VAULT_PAYPAL', '_blank')">💳 Pay with PayPal</button>
+          <button onclick="event.stopPropagation(); window.open('https://nowpayments.io/payment/?iid=DEFI_VAULT_CRYPTO', '_blank')">💸 Pay with Crypto</button>
         </div>
 
         <!-- Pagination -->
         <div class="pagination">
-          <button onclick="changePage(-1)">Previous</button>
-          <button onclick="changePage(1)">Next</button>
+          <button onclick="changePage(-1)">⬅️ Previous</button>
+          <button onclick="changePage(1)">Next ➡️</button>
         </div>
       </section>
     </div>
 
     <div id="user-guide" class="tab-content">
       <section>
-        <h2>[Cybertrendhub] - Simple User Guide</h2>
-        <p><strong>Welcome to Cybertrendhub!</strong></p>
+        <h2>📖 [Cybertrendhub] - Simple User Guide</h2>
+        <p><strong>Welcome to Cybertrendhub! 🚀</strong></p>
         
         <div class="section-card">
-          <h3>1. What the App Does</h3>
+          <h3>1. What the App Does 🛡️</h3>
           <ul>
-            <li>This app helps you trade cryptocurrencies safely.</li>
-            <li>You see market data, trends, and analytics.</li>
-            <li>You place trades on Bybit using your OWN Bybit account.</li>
-            <li><em>Important: We do NOT hold your money or give financial advice.</em></li>
+            <li>Trade cryptocurrencies safely with real-time market data.</li>
+            <li>View trends, analytics, and trading signals.</li>
+            <li>Place trades on Bybit or manage DeFi via your wallet.</li>
+            <li><em>Important: We do NOT hold your funds or provide financial advice.</em></li>
+          </ul>
+          <video class="demo-video" controls>
+            <source src="https://example.com/user-guide-what-it-does.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        
+        <div class="section-card">
+          <h3>2. How It Works 🔄</h3>
+          <ul>
+            <li>AlgoTrader Pro: Automates trades using ML signals, integrates with Bybit for live/virtual trading.</li>
+            <li>DeFi Vault Pro: Scans DeFi opportunities, simulates transactions, tracks APY/TVL.</li>
+            <li>Secure API/wallet integration routes trades via encrypted servers.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>2. How You Connect</h3>
+          <h3>3. How to Connect 🔗</h3>
           <ul>
-            <li>You generate an API key on Bybit (a code that allows trading from the app).</li>
-            <li>You enter this key into the app.</li>
-            <li>The app sends your requests through our secure server with whitelisted IPs.</li>
-            <li>You do NOT need to whitelist your own computer or IP.</li>
+            <li>Generate a Bybit API key or connect your wallet (e.g., MetaMask).</li>
+            <li>Enter details in the app’s secure settings.</li>
+            <li>Trades routed through our encrypted, whitelisted servers.</li>
+            <li>No need to whitelist your IP.</li>
+          </ul>
+          <video class="demo-video" controls>
+            <source src="https://example.com/user-guide-connect.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        
+        <div class="section-card">
+          <h3>4. How to Pay 💳</h3>
+          <ul>
+            <li><strong>PayPal:</strong> Click "Pay with PayPal," complete secure checkout, get instant download link and license key via email.</li>
+            <li><strong>Crypto (NOWPayments):</strong> Click "Pay with Crypto," select BTC/ETH/etc., scan QR code or copy wallet address, confirm payment (5-30 mins), receive access email.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>3. Multiple Users</h3>
+          <h3>5. Multiple Users 👥</h3>
           <ul>
-            <li>Many users can trade at the same time using their own accounts.</li>
-            <li>All requests go through our server IPs.</li>
-            <li>Each user trades from their own account, not ours.</li>
+            <li>Multiple users trade simultaneously with individual accounts.</li>
+            <li>Secure server processes all requests.</li>
+            <li>Your account, your trades—no shared funds.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>4. Risk and Responsibility</h3>
+          <h3>6. Risk and Responsibility ⚠️</h3>
           <ul>
-            <li>Cryptocurrency trading is risky; prices can go up or down.</li>
-            <li>You are fully responsible for your trades.</li>
-            <li>The app does NOT guarantee profits.</li>
-            <li>Our role is only to provide a working and secure tool.</li>
+            <li>Crypto trading is volatile; losses are possible.</li>
+            <li>You’re responsible for all trading decisions.</li>
+            <li>No profit guarantees; use test modes to practice.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>5. Licensing and Security</h3>
+          <h3>7. Licensing and Security 🔐</h3>
           <ul>
-            <li>You need a license key to use the app.</li>
-            <li>Your API keys are private and secure.</li>
-            <li>We do NOT store your API keys for any reason.</li>
+            <li>License key provided post-purchase.</li>
+            <li>API keys/wallets encrypted, not stored.</li>
+            <li>Secure, encrypted backend communication.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>6. Legal and Compliance</h3>
+          <h3>8. Legal and Compliance 📜</h3>
           <ul>
-            <li>The app is legal to sell and use; we only provide software tools.</li>
-            <li>Users trade with their own Bybit accounts.</li>
-            <li>Please read and accept our Terms and Conditions before trading.</li>
-          </ul>
-        </div>
-        
-        <div class="section-card">
-          <h3>Summary:</h3>
-          <ul>
-            <li>Your money stays in your Bybit account.</li>
-            <li>The app acts as a secure bridge between you and Bybit.</li>
-            <li>We do not store your API keys or account info.</li>
+            <li>Legal software for trading via your accounts.</li>
+            <li>Comply with Bybit/wallet rules and local laws.</li>
+            <li>Accept Terms & Conditions before use.</li>
           </ul>
         </div>
       </section>
@@ -185,129 +400,159 @@
 
     <div id="terms" class="tab-content">
       <section>
-        <h2>[Cybertrendhub] - Terms and Conditions</h2>
-        <p><strong>Effective Date: [Insert Date]</strong></p>
-        <p><strong>Welcome!</strong></p>
-        <p>Welcome to Cybertrendhub. This app is a tool to help you trade cryptocurrencies. It shows market data, lets you place trades using your Bybit account, and gives trading analytics. Important: We do not manage your money or give financial advice. You are fully responsible for your trades.</p>
+        <h2>📋 [Cybertrendhub] - Terms & Conditions</h2>
+        <p><strong>Effective Date: October 11, 2025</strong></p>
+        <p><strong>Welcome to Cybertrendhub! 🚀</strong></p>
+        <p>Your tool for crypto trading and DeFi analytics. Connects to Bybit/wallets, shows market data, and provides analytics. We don’t hold funds or offer financial advice—you’re in control! 💪</p>
         
         <div class="section-card">
-          <h3>1. What This App Does</h3>
+          <h3>1. What This App Does 🛠️</h3>
           <ul>
-            <li>Shows real-time market data</li>
-            <li>Lets you place trades on Bybit using your own account</li>
-            <li>Gives alerts, analytics, or trading suggestions</li>
+            <li>Real-time market data 📈</li>
+            <li>Trade on Bybit or manage DeFi via wallets 🔄</li>
+            <li>Analytics and signals 📊</li>
+            <li><strong>Not:</strong> Holding funds, guaranteeing profits, auto-trading 🚫</li>
           </ul>
-          <p><strong>What it does NOT do:</strong></p>
+          <video class="demo-video" controls>
+            <source src="https://example.com/terms-what-it-does.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        
+        <div class="section-card">
+          <h3>2. How It Works ⚙️</h3>
           <ul>
-            <li>Does not hold your money</li>
-            <li>Does not guarantee profits</li>
-            <li>Does not make trades for you automatically</li>
+            <li><strong>AlgoTrader Pro:</strong> ML signals (XGBoost), Bybit integration, risk management (TP/SL, sizing).</li>
+            <li><strong>DeFi Vault Pro:</strong> Multi-chain DeFi scanning, transaction simulation, APY/TVL tracking.</li>
+            <li>Trades routed via encrypted, whitelisted servers.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>2. Your Responsibility</h3>
+          <h3>3. How to Pay 💸</h3>
           <ul>
-            <li>Provide your own Bybit API key from your Bybit account.</li>
-            <li>You are fully responsible for all trades executed with your API key.</li>
-            <li>Keep your API key secure. Do not share it with anyone else.</li>
-            <li>Follow Bybit rules and local laws when trading.</li>
+            <li><strong>PayPal:</strong> Secure checkout, instant license key/download link via email.</li>
+            <li><strong>Crypto (NOWPayments):</strong> Pay BTC/ETH/etc., confirm via QR code/wallet, access post-confirmation.</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>3. Trading Risks</h3>
+          <h3>4. Your Responsibility 🙋</h3>
           <ul>
-            <li>Cryptocurrency trading is risky. Prices can rise or fall quickly.</li>
-            <li>You may lose money.</li>
-            <li>This app cannot prevent losses.</li>
-            <li>By using the app, you accept that trading is at your own risk.</li>
+            <li>Provide Bybit API key or wallet details 🔑</li>
+            <li>Secure your credentials; don’t share 🔒</li>
+            <li>Follow Bybit/wallet rules and local laws ⚖️</li>
+            <li>Responsible for all trades 📉📈</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>4. License to Use This App</h3>
+          <h3>5. Trading Risks ⚠️</h3>
           <ul>
-            <li>You are given permission to use the app on your device.</li>
-            <li>You cannot copy, share, or sell the app without our permission.</li>
-            <li>A license key may be required to use the app. Misuse may result in the app being disabled.</li>
+            <li>Volatile markets; losses possible 📉</li>
+            <li>No loss prevention or profit guarantees 🚫</li>
+            <li>Use at your own risk 🛑</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>5. Security</h3>
+          <h3>6. License to Use 📜</h3>
           <ul>
-            <li>We do not store your API key unless you explicitly allow it.</li>
-            <li>All communication with our backend is secure and encrypted.</li>
-            <li>Always protect your device and API key.</li>
+            <li>Non-transferable device license 💻</li>
+            <li>No copying/sharing/reselling without permission 🚫</li>
+            <li>Misuse may disable license 🔐</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>6. Our Liability</h3>
+          <h3>7. Security 🔒</h3>
           <ul>
-            <li>We are not responsible for:
-              <ul>
-                <li>Any money you lose while trading</li>
-                <li>Technical problems with the app or Bybit</li>
-                <li>Unauthorized trades if your API key is compromised</li>
-              </ul>
-            </li>
-          </ul>
-          <p><strong>Summary: You use the app at your own risk.</strong></p>
-        </div>
-        
-        <div class="section-card">
-          <h3>7. Stopping Access</h3>
-          <ul>
-            <li>We can stop your access if:
-              <ul>
-                <li>You break these rules</li>
-                <li>You try to share the app or your license key</li>
-                <li>You use the app illegally or fraudulently</li>
-              </ul>
-            </li>
+            <li>No storage of API keys/wallets unless permitted 🚫</li>
+            <li>Encrypted backend communication 🔐</li>
+            <li>Protect your device/credentials 🛡️</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>8. Changes to Terms</h3>
+          <h3>8. Our Liability 🛑</h3>
           <ul>
-            <li>We may update these rules sometimes.</li>
-            <li>Continuing to use the app after changes means you accept the new rules.</li>
+            <li>Not liable for losses, technical issues, or compromised keys 🚫</li>
+            <li>Use at your own risk ⚠️</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>9. Governing Law</h3>
+          <h3>9. Stopping Access 🚫</h3>
           <ul>
-            <li>These rules follow the laws of [Insert Country].</li>
-            <li>Any disputes will be resolved in the courts of [Insert Jurisdiction].</li>
+            <li>Revoked for rule violations, sharing, or illegal use 🚷</li>
           </ul>
         </div>
         
         <div class="section-card">
-          <h3>10. Consent</h3>
+          <h3>10. Changes to Terms 🔄</h3>
           <ul>
-            <li>By using this app, you confirm that:
-              <ul>
-                <li>You understand that the app is a trading tool only</li>
-                <li>You are responsible for your trades</li>
-                <li>You understand the risks of cryptocurrency trading</li>
-                <li>You agree to follow these Terms and Conditions</li>
-              </ul>
-            </li>
+            <li>Terms may update; continued use implies acceptance 📝</li>
           </ul>
-          <p><strong>Agreement Checkbox for App Integration:</strong></p>
-          <input type="checkbox" id="termsCheckbox"> I have read and agree to the Terms and Conditions of Cybertrendhub
-          <p><strong>Instructions:</strong>
-            <ol>
-              <li>Include this PDF with your .exe installer or download page.</li>
-              <li>In the app, show this text or a simplified version on first launch.</li>
-              <li>Require the user to check the box before proceeding.</li>
-              <li>Optionally, save the acceptance date and user identifier for records.</li>
-            </ol>
-          </p>
+        </div>
+        
+        <div class="section-card">
+          <h3>11. Governing Law ⚖️</h3>
+          <ul>
+            <li>Governed by Nigerian law 🇳🇬</li>
+            <li>Disputes in Nigerian courts 🏛️</li>
+          </ul>
+        </div>
+        
+        <div class="section-card">
+          <h3>12. Consent ✅</h3>
+          <ul>
+            <li>Confirm understanding of app purpose, responsibility, risks, and terms 🤝</li>
+          </ul>
+          <p><strong>Agreement Checkbox:</strong></p>
+          <input type="checkbox" id="termsCheckbox"> I agree to the Terms & Conditions of Cybertrendhub ✅
+          <p><strong>Instructions:</strong></p>
+          <ol>
+            <li>Include PDF with installer/download page 📄</li>
+            <li>Show terms on first app launch 📱</li>
+            <li>Require checkbox agreement ✅</li>
+            <li>Optionally save acceptance date/user ID 📅</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <div id="faqs" class="tab-content">
+      <section>
+        <h2>❓ Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <div class="faq-question">How do I start using AlgoTrader Pro? 🚀</div>
+          <div class="faq-answer">
+            Purchase via PayPal or Crypto, receive a license key, download the app, enter your Bybit API key, and trade in virtual/live mode.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What chains does DeFi Vault Pro support? 🌐</div>
+          <div class="faq-answer">
+            Ethereum, BSC, Arbitrum, Optimism, Base, Avalanche, Neon EVM, with integrations for Aave, Compound, Uniswap.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Is my API key secure? 🔒</div>
+          <div class="faq-answer">
+            Yes, encrypted and not stored; trades routed via secure servers.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">What are the payment options? 💸</div>
+          <div class="faq-answer">
+            PayPal for instant card payments or NOWPayments for crypto (BTC, ETH, etc.). Access emailed post-payment.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Can I try before buying? 🎥</div>
+          <div class="faq-answer">
+            Watch demo videos or use virtual mode post-purchase to test risk-free.
+          </div>
         </div>
       </section>
     </div>
@@ -339,7 +584,11 @@
     <div class="modal-content">
       <span class="close" onclick="document.getElementById('algotraderModal').style.display='none'">&times;</span>
       <h2>📊 AlgoTrader Pro - Details</h2>
-      <p>Automated trading, ML-enhanced signals, Bybit integration (multi-exchange coming soon), virtual & live modes.</p>
+      <p>Automated trading, ML-enhanced signals, Bybit integration, virtual & live modes.</p>
+      <video class="demo-video" controls>
+        <source src="https://example.com/algotrader-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
       <ul>
         <li>🤖 XGBoost signal filtering</li>
         <li>📈 Multi-timeframe technical analysis (15m,1h,4h)</li>
@@ -350,8 +599,8 @@
         <li>Notifications: Discord, Telegram, WhatsApp integration</li>
       </ul>
       <p><strong>Price: $49</strong></p>
-      <button onclick="window.location.href='https://nowpayments.io'">💸 Pay Crypto (NOWPayments)</button>
-      <button onclick="window.location.href='https://paypal.com'">💳 Pay with PayPal</button>
+      <button onclick="window.location.href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ALGOTRADER_PAYPAL'">💳 Pay with PayPal</button>
+      <button onclick="window.location.href='https://nowpayments.io/payment/?iid=ALGOTRADER_CRYPTO'">💸 Pay with Crypto</button>
     </div>
   </div>
 
@@ -361,6 +610,10 @@
       <span class="close" onclick="document.getElementById('defiModal').style.display='none'">&times;</span>
       <h2>🌐 DeFi Vault Pro - Details</h2>
       <p>Multi-chain DeFi scanner with wallet simulation, real-time APY tracking & integrations.</p>
+      <video class="demo-video" controls>
+        <source src="https://example.com/defi-vault-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
       <ul>
         <li>🔗 MetaMask, Phantom, SUI, TAO support</li>
         <li>📊 Real-time P&L and APY visualizations</li>
@@ -371,9 +624,16 @@
         <li>Smart Contract Integration: Aave, Compound, Uniswap</li>
       </ul>
       <p><strong>Price: $59</strong></p>
-      <button onclick="window.location.href='https://nowpayments.io'">💸 Pay Crypto (NOWPayments)</button>
-      <button onclick="window.location.href='https://paypal.com'">💳 Pay with PayPal</button>
+      <button onclick="window.location.href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEFI_VAULT_PAYPAL'">💳 Pay with PayPal</button>
+      <button onclick="window.location.href='https://nowpayments.io/payment/?iid=DEFI_VAULT_CRYPTO'">💸 Pay with Crypto</button>
     </div>
+  </div>
+
+  <!-- WhatsApp Chat -->
+  <div class="whatsapp-chat">
+    <a href="https://wa.me/2341234567890?text=Hello%20Cybertrendhub!%20I%20have%20a%20question%20about%20your%20products." target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chat">
+    </a>
   </div>
 
   <footer>
@@ -382,6 +642,29 @@
   </footer>
 
   <script>
+    // Fetch real-time crypto prices from CoinGecko API
+    async function fetchCryptoPrices() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&order=market_cap_desc&per_page=3&page=1&sparkline=false&price_change_percentage=24h');
+        const data = await response.json();
+        let tickerText = '';
+        data.forEach(coin => {
+          const price = coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+          const change = coin.price_change_percentage_24h.toFixed(2);
+          tickerText += `${coin.symbol.toUpperCase()}: ${price} (${change > 0 ? '+' : ''}${change}%) | `;
+        });
+        tickerText += 'Multi-exchange support coming soon';
+        document.getElementById('ticker-content').textContent = tickerText;
+      } catch (error) {
+        console.error('Error fetching crypto prices:', error);
+        document.getElementById('ticker-content').textContent = 'Error loading prices | Multi-exchange support coming soon';
+      }
+    }
+
+    // Fetch prices initially and every 60 seconds
+    fetchCryptoPrices();
+    setInterval(fetchCryptoPrices, 60000);
+
     // Tab Switching
     function openTab(tabName) {
       const tabs = document.getElementsByClassName('tab-button');
@@ -425,6 +708,14 @@
         event.target.style.display = 'none';
       }
     }
+
+    // FAQ Toggle Functionality
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const answer = item.querySelector('.faq-answer');
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      });
+    });
   </script>
 </body>
 </html>
