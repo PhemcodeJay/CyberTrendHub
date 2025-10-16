@@ -5,99 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cybertrendhub - Crypto Tools Marketplace</title>
   <style>
-    /* Modernized CSS with light background */
+    /* CSS with black and neon background, improved readability */
     body { 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
       margin: 0; 
       padding: 0; 
-      background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); /* Light, blending background */
-      color: #333; 
+      background: #000; /* Black background */
+      color: #d0d0d0; /* Medium-light gray for readability */
       text-align: center; 
+      overflow-x: hidden;
     }
     .container { 
       max-width: 1200px; 
       margin: 0 auto; 
       padding: 0 20px; 
-      background: rgba(255, 255, 255, 0.97); 
-      border-radius: 10px; 
-      box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+      background: rgba(20, 20, 20, 0.9); /* Darker semi-transparent gray */
+      border-radius: 15px; 
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); /* Subtle neon green shadow */
+      position: relative;
+      z-index: 1;
     }
     header { 
-      background: linear-gradient(135deg, #333, #555); 
-      color: white; 
-      padding: 30px; 
+      background: linear-gradient(135deg, #111, #222); /* Dark gradient */
+      color: #00ff00; /* Neon green for headers */
+      padding: 40px; 
       text-align: center; 
-      border-radius: 10px 10px 0 0; 
+      border-radius: 15px 15px 0 0; 
+      text-shadow: 0 0 8px #00ff00; /* Subtle neon glow */
+      animation: pulseHeader 2s infinite ease-in-out;
+    }
+    @keyframes pulseHeader {
+      0% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(0, 255, 0, 0.7); }
+      100% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); }
     }
     .tab-container { 
       display: flex; 
       justify-content: center; 
       flex-wrap: wrap; 
-      background: #fff; 
-      padding: 10px; 
-      border-radius: 0 0 10px 10px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+      background: #222; /* Darker gray */
+      padding: 15px; 
+      border-radius: 0 0 15px 15px; 
+      box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3); /* Subtle neon cyan shadow */
     }
     .tab-button { 
-      padding: 12px 24px; 
+      padding: 15px 30px; 
       cursor: pointer; 
-      background: linear-gradient(135deg, #007bff, #0056b3); 
-      color: white; 
+      background: linear-gradient(135deg, #00ff00, #00cc00); /* Neon green gradient */
+      color: #111; /* Dark text for contrast */
       border: none; 
       outline: none; 
-      margin: 5px; 
-      border-radius: 25px; 
-      transition: all 0.3s ease; 
+      margin: 8px; 
+      border-radius: 30px; 
+      transition: all 0.4s ease; 
       font-weight: bold; 
     }
     .tab-button:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 8px rgba(0,123,255,0.3); 
+      transform: translateY(-3px) scale(1.05); 
+      box-shadow: 0 6px 15px rgba(0, 255, 0, 0.5); 
+      background: linear-gradient(135deg, #00cc00, #009900); 
     }
     .tab-button.active { 
-      background: linear-gradient(135deg, #28a745, #20c997); 
+      background: linear-gradient(135deg, #00ffff, #00b7eb); /* Neon cyan gradient */
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); 
     }
     .tab-content { 
       display: none; 
-      padding: 30px; 
+      padding: 40px; 
       width: 100%; 
-      animation: fadeIn 0.5s; 
+      animation: fadeIn 0.7s ease-in-out; 
     }
     .tab-content.active { 
       display: block; 
     }
     @keyframes fadeIn { 
-      from { opacity: 0; transform: translateY(20px); } 
+      from { opacity: 0; transform: translateY(30px); } 
       to { opacity: 1; transform: translateY(0); } 
     }
     .product-card { 
-      border: none; 
-      padding: 25px; 
-      margin: 20px auto; 
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
-      border-radius: 15px; 
+      border: 2px solid #00ff00; /* Neon green border */
+      padding: 30px; 
+      margin: 25px auto; 
+      background: #1a1a1a; /* Dark gray for readability */
+      border-radius: 20px; 
       max-width: 600px; 
-      animation: slideIn 0.5s; 
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
-      transition: transform 0.3s ease, box-shadow 0.3s ease; 
+      animation: slideIn 0.7s ease-in-out; 
+      box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4); /* Subtle neon shadow */
+      transition: transform 0.4s ease, box-shadow 0.4s ease; 
       cursor: pointer; 
+      position: relative; 
+      overflow: hidden;
     }
     .product-card:hover { 
-      transform: translateY(-5px); 
-      box-shadow: 0 12px 35px rgba(0,0,0,0.2); 
+      transform: translateY(-8px); 
+      box-shadow: 0 12px 30px rgba(0, 255, 255, 0.6); 
+      border-color: #00ffff; /* Neon cyan on hover */
+    }
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    .product-card:hover::before {
+      left: 100%;
     }
     .section-card { 
-      border: none; 
-      padding: 20px; 
-      margin: 15px auto; 
-      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
-      border-radius: 12px; 
+      border: 2px solid #00ff00; /* Neon green border */
+      padding: 25px; 
+      margin: 20px auto; 
+      background: #1a1a1a; /* Dark gray for readability */
+      border-radius: 15px; 
       max-width: 800px; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-      animation: slideIn 0.5s; 
+      box-shadow: 0 6px 20px rgba(0, 255, 0, 0.3); 
+      animation: slideIn 0.7s ease-in-out; 
+      transition: transform 0.3s ease;
+    }
+    .section-card:hover {
+      transform: translateY(-5px);
+      border-color: #00ffff; /* Neon cyan on hover */
     }
     @keyframes slideIn { 
-      from { transform: translateY(30px); opacity: 0; } 
+      from { transform: translateY(40px); opacity: 0; } 
       to { transform: translateY(0); opacity: 1; } 
     }
     .modal { 
@@ -109,94 +142,113 @@
       width: 100%; 
       height: 100%; 
       overflow: auto; 
-      background-color: rgba(0,0,0,0.5); 
-      backdrop-filter: blur(5px); 
+      background-color: rgba(0, 0, 0, 0.8); 
+      backdrop-filter: blur(8px); 
     }
     .modal-content { 
-      background: linear-gradient(135deg, #fff, #f8f9fa); 
-      margin: 10% auto; 
-      padding: 30px; 
-      border-radius: 15px; 
+      background: #1a1a1a; /* Dark gray for readability */
+      margin: 8% auto; 
+      padding: 40px; 
+      border: 2px solid #00ff00; /* Neon green border */
+      border-radius: 20px; 
       width: 90%; 
-      max-width: 800px; 
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+      max-width: 900px; 
+      box-shadow: 0 15px 50px rgba(0, 255, 255, 0.6); 
       overflow-y: auto; 
-      max-height: 80%; 
+      max-height: 85%; 
+      color: #d0d0d0; /* Medium-light gray text */
     }
     .close { 
-      color: #aaa; 
+      color: #00ff00; /* Neon green */
       float: right; 
-      font-size: 35px; 
+      font-size: 40px; 
       font-weight: bold; 
       cursor: pointer; 
-      transition: color 0.3s; 
+      transition: color 0.3s, transform 0.3s; 
     }
     .close:hover { 
-      color: #333; 
+      color: #00ffff; /* Neon cyan */
+      transform: rotate(90deg); 
     }
     .pagination { 
       text-align: center; 
-      margin: 30px 0; 
+      margin: 40px 0; 
     }
     .pagination button { 
-      margin: 0 10px; 
-      padding: 10px 20px; 
-      background: linear-gradient(135deg, #007bff, #0056b3); 
-      color: white; 
+      margin: 0 15px; 
+      padding: 12px 25px; 
+      background: linear-gradient(135deg, #00ff00, #00cc00); 
+      color: #111; 
       border: none; 
-      border-radius: 25px; 
+      border-radius: 30px; 
       cursor: pointer; 
-      transition: all 0.3s; 
+      transition: all 0.4s; 
+      font-weight: bold; 
     }
     .pagination button:hover { 
-      transform: translateY(-2px); 
+      transform: translateY(-3px); 
+      box-shadow: 0 6px 15px rgba(0, 255, 0, 0.5); 
+      background: linear-gradient(135deg, #00cc00, #009900); 
     }
     .faq-item { 
-      margin-bottom: 15px; 
-      background: white; 
-      border-radius: 10px; 
-      padding: 15px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+      margin-bottom: 20px; 
+      background: #1a1a1a; /* Dark gray */
+      border: 2px solid #00ff00; /* Neon green border */
+      border-radius: 12px; 
+      padding: 20px; 
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3); 
       cursor: pointer; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    }
+    .faq-item:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5); 
+      border-color: #00ffff; /* Neon cyan */
     }
     .faq-question { 
       font-weight: bold; 
-      margin-bottom: 10px; 
+      margin-bottom: 15px; 
+      color: #00ff00; /* Neon green */
+      text-shadow: 0 0 5px #00ff00; 
     }
     .faq-answer { 
       display: none; 
-      padding: 10px; 
-      background: #f8f9fa; 
-      border-radius: 8px; 
-      margin-top: 10px; 
+      padding: 15px; 
+      background: #222; /* Slightly lighter gray */
+      border-radius: 10px; 
+      margin-top: 15px; 
+      color: #d0d0d0; /* Medium-light gray */
     }
     button { 
       cursor: pointer; 
-      padding: 12px 24px; 
-      margin: 10px; 
-      background: linear-gradient(135deg, #28a745, #20c997); 
-      color: white; 
+      padding: 15px 30px; 
+      margin: 15px; 
+      background: linear-gradient(135deg, #00ff00, #00cc00); 
+      color: #111; 
       border: none; 
-      border-radius: 25px; 
+      border-radius: 30px; 
       font-weight: bold; 
-      transition: all 0.3s; 
+      transition: all 0.4s; 
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.4); 
     }
     button:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 4px 12px rgba(40,167,69,0.3); 
+      transform: translateY(-3px) scale(1.05); 
+      box-shadow: 0 8px 20px rgba(0, 255, 0, 0.6); 
+      background: linear-gradient(135deg, #00cc00, #009900); 
     }
     #crypto-ticker { 
-      background: linear-gradient(90deg, #222, #333); 
-      color: #00ff88; 
-      padding: 15px; 
-      font-size: 16px; 
+      background: linear-gradient(90deg, #111, #222); 
+      color: #00ff00; /* Neon green */
+      padding: 20px; 
+      font-size: 18px; 
       overflow: hidden; 
       white-space: nowrap; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+      box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3); 
+      text-shadow: 0 0 5px #00ff00; 
     }
     .ticker-content { 
       display: inline-block; 
-      animation: ticker 25s linear infinite; 
+      animation: ticker 30s linear infinite; 
       font-family: monospace; 
     }
     @keyframes ticker { 
@@ -205,30 +257,45 @@
     }
     .demo-video { 
       width: 100%; 
-      height: 300px; 
-      border-radius: 10px; 
-      margin: 20px 0; 
+      height: 350px; 
+      border-radius: 15px; 
+      margin: 25px 0; 
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); 
+      transition: transform 0.3s ease; 
+    }
+    .demo-video:hover {
+      transform: scale(1.02);
     }
     ul { 
       text-align: left; 
       list-style-position: inside; 
+      color: #d0d0d0; /* Medium-light gray */
     }
     li { 
-      margin: 5 Mars 2026px 0; 
+      margin: 10px 0; 
     }
     .whatsapp-chat { 
       position: fixed; 
-      bottom: 20px; 
-      right: 20px; 
+      bottom: 30px; 
+      right: 30px; 
       z-index: 1000; 
     }
     .whatsapp-chat img { 
-      width: 60px; 
+      width: 70px; 
       cursor: pointer; 
-      transition: transform 0.3s; 
+      transition: transform 0.4s, filter 0.4s; 
+      filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.4)); 
     }
     .whatsapp-chat img:hover { 
-      transform: scale(1.1); 
+      transform: scale(1.15) rotate(10deg); 
+      filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.7)); 
+    }
+    footer {
+      padding: 20px;
+      background: #222;
+      color: #00ff00; /* Neon green */
+      text-shadow: 0 0 5px #00ff00;
+      border-radius: 0 0 15px 15px;
     }
   </style>
 </head>
@@ -278,7 +345,7 @@
             <li>Notifications: Discord, Telegram, WhatsApp integration</li>
           </ul>
           <p><strong>Price: $49</strong></p>
-          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=ALGOTRADER_DEMO', '_blank')">🎥 Watch Demo</button>
+          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=bot_trading_demo1', '_blank')">🎥 Watch Demo</button>
           <button onclick="event.stopPropagation(); window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ALGOTRADER_PAYPAL', '_blank')">💳 Pay with PayPal</button>
           <button onclick="event.stopPropagation(); window.open('https://nowpayments.io/payment/?iid=ALGOTRADER_CRYPTO', '_blank')">💸 Pay with Crypto</button>
         </div>
@@ -297,7 +364,7 @@
             <li>Smart Contract Integration: Aave, Compound, Uniswap</li>
           </ul>
           <p><strong>Price: $59</strong></p>
-          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=DEFI_VAULT_DEMO', '_blank')">🎥 Watch Demo</button>
+          <button onclick="event.stopPropagation(); window.open('https://www.youtube.com/watch?v=bot_trading_demo2', '_blank')">🎥 Watch Demo</button>
           <button onclick="event.stopPropagation(); window.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEFI_VAULT_PAYPAL', '_blank')">💳 Pay with PayPal</button>
           <button onclick="event.stopPropagation(); window.open('https://nowpayments.io/payment/?iid=DEFI_VAULT_CRYPTO', '_blank')">💸 Pay with Crypto</button>
         </div>
@@ -324,7 +391,7 @@
             <li><em>Important: We do NOT hold your funds or provide financial advice.</em></li>
           </ul>
           <video class="demo-video" controls>
-            <source src="https://example.com/user-guide-what-it-does.mp4" type="video/mp4">
+            <source src="https://www.youtube.com/watch?v=bot_trading_guide1" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
@@ -347,7 +414,7 @@
             <li>No need to whitelist your IP.</li>
           </ul>
           <video class="demo-video" controls>
-            <source src="https://example.com/user-guide-connect.mp4" type="video/mp4">
+            <source src="https://www.youtube.com/watch?v=bot_trading_connect1" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
@@ -414,7 +481,7 @@
             <li><strong>Not:</strong> Holding funds, guaranteeing profits, auto-trading 🚫</li>
           </ul>
           <video class="demo-video" controls>
-            <source src="https://example.com/terms-what-it-does.mp4" type="video/mp4">
+            <source src="https://www.youtube.com/watch?v=bot_trading_terms1" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
@@ -586,7 +653,7 @@
       <h2>📊 AlgoTrader Pro - Details</h2>
       <p>Automated trading, ML-enhanced signals, Bybit integration, virtual & live modes.</p>
       <video class="demo-video" controls>
-        <source src="https://example.com/algotrader-demo.mp4" type="video/mp4">
+        <source src="https://www.youtube.com/watch?v=bot_trading_algotrader" type="video/mp4">
         Your browser does not support the video tag.
       </video>
       <ul>
@@ -611,7 +678,7 @@
       <h2>🌐 DeFi Vault Pro - Details</h2>
       <p>Multi-chain DeFi scanner with wallet simulation, real-time APY tracking & integrations.</p>
       <video class="demo-video" controls>
-        <source src="https://example.com/defi-vault-demo.mp4" type="video/mp4">
+        <source src="https://www.youtube.com/watch?v=bot_trading_defivault" type="video/mp4">
         Your browser does not support the video tag.
       </video>
       <ul>
@@ -642,10 +709,10 @@
   </footer>
 
   <script>
-    // Fetch real-time crypto prices from CoinGecko API
+    // Fetch real-time crypto prices for top 10 cryptocurrencies from CoinGecko API
     async function fetchCryptoPrices() {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&order=market_cap_desc&per_page=3&page=1&sparkline=false&price_change_percentage=24h');
+        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false&price_change_percentage=24h');
         const data = await response.json();
         let tickerText = '';
         data.forEach(coin => {
@@ -714,6 +781,18 @@
       item.addEventListener('click', () => {
         const answer = item.querySelector('.faq-answer');
         answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+
+    // Add scroll animation for smooth reveal
+    window.addEventListener('scroll', () => {
+      const elements = document.querySelectorAll('.product-card, .section-card');
+      elements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.8) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }
       });
     });
   </script>
