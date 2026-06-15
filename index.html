@@ -9,6 +9,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── DARK THEME (default) ── */
     :root {
       --green: #00ff41;
       --cyan: #00e5ff;
@@ -20,6 +21,40 @@
       --text-muted: #7a9a7a;
       --accent-red: #ff4444;
       --accent-amber: #ffaa00;
+      --ticker-bg: #080808;
+      --ticker-border: #1a2a1a;
+      --ticker-item-border: #1a3a1a;
+      --tab-nav-bg: #0d0d0d;
+      --tab-nav-border: #1a2a1a;
+      --footer-bg: transparent;
+      --matrix-opacity: 0.07;
+      --section-border: #1a2a1a;
+      --modal-bg: #0f0f0f;
+      --stat-gap: #1a2a1a;
+    }
+
+    /* ── LIGHT THEME ── */
+    html.light {
+      --green: #007a1f;
+      --cyan: #006b99;
+      --dim-green: #008822;
+      --dark: #f0f4f0;
+      --card-bg: #ffffff;
+      --card-border: #c8ddc8;
+      --text: #1a2e1a;
+      --text-muted: #4a6a4a;
+      --accent-red: #cc0000;
+      --accent-amber: #cc7700;
+      --ticker-bg: #e8f0e8;
+      --ticker-border: #b8d0b8;
+      --ticker-item-border: #c0d4c0;
+      --tab-nav-bg: #e4ede4;
+      --tab-nav-border: #b8d0b8;
+      --footer-bg: transparent;
+      --matrix-opacity: 0.03;
+      --section-border: #c0d4c0;
+      --modal-bg: #f8fbf8;
+      --stat-gap: #c8ddc8;
     }
 
     html { scroll-behavior: smooth; }
@@ -38,14 +73,14 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 0;
-      opacity: 0.07;
+      opacity: var(--matrix-opacity);
       pointer-events: none;
     }
 
     /* ── TICKER ── */
     #ticker-bar {
-      background: #080808;
-      border-bottom: 1px solid #1a2a1a;
+      background: var(--ticker-bg);
+      border-bottom: 1px solid var(--ticker-border);
       padding: 10px 0;
       overflow: hidden;
       position: sticky;
@@ -62,7 +97,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
       padding: 0 24px;
-      border-right: 1px solid #1a3a1a;
+      border-right: 1px solid var(--ticker-item-border);
       color: var(--green);
       white-space: nowrap;
     }
@@ -159,8 +194,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1px;
-      background: #1a2a1a;
-      border: 1px solid #1a2a1a;
+      background: var(--stat-gap);
+      border: 1px solid var(--stat-gap);
       border-radius: 12px;
       overflow: hidden;
       margin: 0 0 48px;
@@ -193,8 +228,8 @@
       justify-content: center;
       margin-bottom: 40px;
       padding: 16px;
-      background: #0d0d0d;
-      border: 1px solid #1a2a1a;
+      background: var(--tab-nav-bg);
+      border: 1px solid var(--tab-nav-border);
       border-radius: 14px;
     }
     .tab-btn {
@@ -211,9 +246,9 @@
       transition: all 0.25s;
     }
     .tab-btn:hover {
-      border-color: #2a4a2a;
+      border-color: var(--section-border);
       color: var(--green);
-      background: rgba(0,255,65,0.04);
+      background: rgba(128,180,128,0.07);
     }
     .tab-btn.active {
       background: rgba(0,255,65,0.1);
@@ -239,14 +274,14 @@
       color: var(--text-muted);
       margin-bottom: 24px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #1a2a1a;
+      border-bottom: 1px solid var(--section-border);
     }
     .section-heading span { color: var(--green); margin-right: 8px; }
 
     /* ── CARDS ── */
     .card {
       background: var(--card-bg);
-      border: 1px solid #1a2a1a;
+      border: 1px solid var(--section-border);
       border-radius: 14px;
       padding: 28px;
       margin-bottom: 20px;
@@ -354,7 +389,7 @@
     }
     .skill-card {
       background: var(--card-bg);
-      border: 1px solid #1a2a1a;
+      border: 1px solid var(--section-border);
       border-radius: 12px;
       padding: 22px;
       transition: border-color 0.25s, transform 0.25s;
@@ -378,7 +413,7 @@
     }
     .skill-tag {
       background: rgba(0,255,65,0.05);
-      border: 1px solid #1e3a1e;
+      border: 1px solid var(--card-border);
       color: var(--text);
       font-size: 12px;
       padding: 3px 10px;
@@ -394,7 +429,7 @@
     }
     .repo-card {
       background: var(--card-bg);
-      border: 1px solid #1a2a1a;
+      border: 1px solid var(--section-border);
       border-radius: 12px;
       padding: 22px;
       transition: border-color 0.25s, transform 0.25s;
@@ -508,7 +543,7 @@
     }
     .contact-card {
       background: var(--card-bg);
-      border: 1px solid #1a2a1a;
+      border: 1px solid var(--section-border);
       border-radius: 12px;
       padding: 22px;
       text-align: center;
@@ -544,8 +579,8 @@
     }
     .modal-overlay.open { display: flex; }
     .modal-box {
-      background: #0f0f0f;
-      border: 1px solid rgba(0,255,65,0.3);
+      background: var(--modal-bg);
+      border: 1px solid rgba(0,200,80,0.3);
       border-radius: 16px;
       padding: 40px;
       max-width: 680px;
@@ -594,7 +629,7 @@
     footer {
       text-align: center;
       padding: 40px 20px;
-      border-top: 1px solid #1a2a1a;
+      border-top: 1px solid var(--section-border);
       color: var(--text-muted);
       font-size: 13px;
       font-family: 'JetBrains Mono', monospace;
@@ -616,11 +651,84 @@
       .tab-btn { font-size: 11px; padding: 8px 14px; }
       .modal-box { padding: 28px 20px; }
     }
+
+    /* ── THEME TOGGLE ── */
+    #theme-toggle {
+      position: fixed;
+      top: 58px;
+      right: 16px;
+      z-index: 200;
+      width: 48px;
+      height: 26px;
+      background: var(--card-bg);
+      border: 1px solid var(--section-border);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      transition: background 0.3s, border-color 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    #theme-toggle .knob {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green);
+      transition: transform 0.3s, background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    html.light #theme-toggle .knob {
+      transform: translateX(22px);
+    }
+    #theme-toggle-label {
+      position: fixed;
+      top: 62px;
+      right: 70px;
+      z-index: 200;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+
+    /* ── LIGHT MODE OVERRIDES for hardcoded inline colors ── */
+    html.light .stat-cell { background: var(--card-bg); }
+    html.light .tab-btn:hover { background: rgba(0,120,40,0.08); }
+    html.light .tab-btn.active { background: rgba(0,120,40,0.12); }
+    html.light .btn-primary {
+      background: rgba(0,120,40,0.1);
+      border-color: var(--dim-green);
+      color: var(--green);
+    }
+    html.light .btn-primary:hover { background: rgba(0,120,40,0.2); }
+    html.light .btn-secondary {
+      background: rgba(0,100,150,0.08);
+      border-color: rgba(0,100,150,0.35);
+      color: var(--cyan);
+    }
+    html.light .btn-ghost {
+      border-color: var(--section-border);
+      color: var(--text-muted);
+    }
+    html.light .ticker-item .up { color: var(--green); }
+    html.light footer { color: var(--text-muted); }
+    html.light .name-badge { text-shadow: 0 0 20px rgba(0,120,40,0.25); }
+    html.light .stat-value { text-shadow: 0 0 10px rgba(0,120,40,0.2); }
+
   </style>
 </head>
 <body>
 
 <canvas id="matrix-bg"></canvas>
+<span id="theme-toggle-label">DARK</span>
+<button id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode"><span class="knob">🌙</span></button>
 
 <!-- TICKER -->
 <div id="ticker-bar" aria-label="Live crypto prices">
@@ -700,7 +808,7 @@
 
   <!-- ── MARKETPLACE ── -->
   <div id="marketplace" class="tab-panel active">
-    <div class="section-heading"><span>01</span> Premium Crypto Tools — Instant download on payment</div>
+    <div class="section-heading"><span>01</span> Premium Crypto Tools — PayPal, Crypto, or Gumroad</div>
 
     <!-- AlgoTrader Pro -->
     <div class="card" onclick="openModal('modal-algo')" style="cursor:pointer;">
@@ -715,11 +823,29 @@
         <li>Notifications via Discord, Telegram & WhatsApp</li>
         <li>Virtual back-test mode & live execution mode</li>
       </ul>
-      <div class="price-badge"><span class="currency">USD </span>49</div>
+      <div class="price-badge"><span class="currency">USD </span>50 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">· free on Gumroad (pay what you want)</span></div>
       <div class="btn-row" onclick="event.stopPropagation()">
         <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=bot_trading_demo1" target="_blank">🎥 Demo</a>
         <a class="btn btn-secondary" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ALGOTRADER_PAYPAL" target="_blank">💳 PayPal</a>
         <a class="btn btn-primary" href="https://nowpayments.io/payment/?iid=ALGOTRADER_CRYPTO" target="_blank">💸 Crypto</a>
+        <a class="btn btn-primary" href="https://olphemie.gumroad.com/l/algotrader" target="_blank">🛍 Gumroad</a>
+      </div>
+    </div>
+
+    <!-- DeFi Scanner (Gumroad) -->
+    <div class="card" onclick="window.open('https://olphemie.gumroad.com/l/defiscanner','_blank')" style="cursor:pointer;">
+      <div class="card-label">🔬 DeFi Tool — Gumroad</div>
+      <div class="card-title">DefiScanner</div>
+      <div class="card-desc">Standalone DeFi protocol scanner — sniff out yield opportunities, TVL movements, and cross-chain signals in real time.</div>
+      <ul class="card-features">
+        <li>Real-time TVL and APY scanning across major DeFi protocols</li>
+        <li>Cross-chain opportunity detection (Ethereum, BSC, Arbitrum, and more)</li>
+        <li>Lightweight, instant-download tool — no subscription required</li>
+        <li>Pairs perfectly with DeFi Vault Pro for a complete DeFi stack</li>
+      </ul>
+      <div class="price-badge"><span class="currency">USD </span>19 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">· free on Gumroad (pay what you want)</span></div>
+      <div class="btn-row" onclick="event.stopPropagation()">
+        <a class="btn btn-primary" href="https://olphemie.gumroad.com/l/defiscanner" target="_blank">🛍 Get on Gumroad</a>
       </div>
     </div>
 
@@ -736,7 +862,7 @@
         <li>Smart contract integrations: Aave, Compound, Uniswap</li>
         <li>Yield farming & meme coin opportunity scanner with TVL filters</li>
       </ul>
-      <div class="price-badge"><span class="currency">USD </span>59</div>
+      <div class="price-badge"><span class="currency">USD </span>19 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">· free on Gumroad (pay what you want)</span></div>
       <div class="btn-row" onclick="event.stopPropagation()">
         <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=bot_trading_demo2" target="_blank">🎥 Demo</a>
         <a class="btn btn-secondary" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEFI_VAULT_PAYPAL" target="_blank">💳 PayPal</a>
@@ -903,7 +1029,7 @@
 
     <!-- ── BOOKS ── -->
   <div id="books" class="tab-panel">
-    <div class="section-heading"><span>05</span> Published Books &mdash; Available on Amazon Kindle &amp; Paperback</div>
+    <div class="section-heading"><span>05</span> Published Books &mdash; Amazon &amp; Gumroad</div>
 
     <!-- Book 1: Essential Trading Guide -->
     <div class="card" style="display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap;">
@@ -928,8 +1054,9 @@
           <li>Mindset and consistency strategies for long-term profitability</li>
         </ul>
         <div class="btn-row" style="margin-top:8px;">
-          <a class="btn btn-primary" href="https://www.amazon.com/Essential-Trading-Guide-Profitable-Strategies-ebook/dp/B0D2PP9L6J" target="_blank">📱 Kindle Edition</a>
+          <a class="btn btn-primary" href="https://www.amazon.com/Essential-Trading-Guide-Profitable-Strategies-ebook/dp/B0D2PP9L6J" target="_blank">📱 Kindle</a>
           <a class="btn btn-ghost" href="https://www.amazon.com/Essential-Trading-Guide-Profitable-Strategies/dp/B0D2R6NVJ3" target="_blank">📦 Paperback</a>
+          <a class="btn btn-secondary" href="https://olphemie.gumroad.com/l/rkdugl" target="_blank">🛍 Gumroad</a>
         </div>
       </div>
     </div>
@@ -957,14 +1084,24 @@
           <li>How to navigate the crypto market with confidence and security</li>
         </ul>
         <div class="btn-row" style="margin-top:8px;">
-          <a class="btn btn-secondary" href="https://www.amazon.com/Crypto-Made-Simple-Essential-Digital-ebook/dp/B0CPP658TT" target="_blank">📱 Kindle Edition</a>
+          <a class="btn btn-secondary" href="https://www.amazon.com/Crypto-Made-Simple-Essential-Digital-ebook/dp/B0CPP658TT" target="_blank">📱 Kindle</a>
           <a class="btn btn-ghost" href="https://www.amazon.com/Crypto-Made-Simple-Essential-Digital/dp/B0CWRVMR4C" target="_blank">📦 Paperback</a>
+          <a class="btn btn-primary" href="https://olphemie.gumroad.com/l/nisqte" target="_blank">🛍 Gumroad</a>
         </div>
       </div>
     </div>
 
     <div style="text-align:center; margin-top:8px;">
       <a class="btn btn-ghost" href="https://www.amazon.com/author/B0D2PP9L6J" target="_blank">View all books by OLUWAFEMI JEGEDE on Amazon &rarr;</a>
+    </div>
+
+    <!-- Gumroad also-available note -->
+    <div style="text-align:center; margin-top:20px; padding:16px; background:var(--card-bg); border:1px solid var(--section-border); border-radius:12px;">
+      <p style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">Also available on Gumroad — name your price</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+        <a class="btn btn-primary" href="https://olphemie.gumroad.com/l/rkdugl" target="_blank">📊 Trading Guide on Gumroad</a>
+        <a class="btn btn-secondary" href="https://olphemie.gumroad.com/l/nisqte" target="_blank">₿ Crypto Made Simple on Gumroad</a>
+      </div>
     </div>
   </div>
 
@@ -997,6 +1134,11 @@
         <div class="contact-icon">🌐</div>
         <div class="contact-label">Portfolio</div>
         <div class="contact-value"><a href="https://cybertrendhub.onrender.com" target="_blank">cybertrendhub.onrender.com</a></div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">🛍</div>
+        <div class="contact-label">Gumroad Store</div>
+        <div class="contact-value"><a href="https://olphemie.gumroad.com" target="_blank">olphemie.gumroad.com</a></div>
       </div>
       <div class="contact-card">
         <div class="contact-icon">🏢</div>
@@ -1130,6 +1272,22 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
   });
+
+  // ── THEME TOGGLE ──
+  (function() {
+    const html = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    const knob = btn.querySelector('.knob');
+    const label = document.getElementById('theme-toggle-label');
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') { html.classList.add('light'); knob.textContent = '☀️'; label.textContent = 'LIGHT'; }
+    btn.addEventListener('click', () => {
+      const isLight = html.classList.toggle('light');
+      knob.textContent = isLight ? '☀️' : '🌙';
+      label.textContent = isLight ? 'LIGHT' : 'DARK';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+  })();
 </script>
 </body>
 </html>
