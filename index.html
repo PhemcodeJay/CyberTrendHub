@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CyberTrendHub - Your premier destination for cutting-edge technology insights, digital trends, and innovative solutions.">
+  <meta name="keywords" content="technology, cyber trends, digital innovation, tech insights, blockchain, AI, web3">
+  <meta name="author" content="CyberTrendHub">
+  <title>CyberTrendHub - Digital Innovation & Technology Insights</title>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* CSS Custom Properties for Theme */
+    :root {
+      --primary-color: #0b2b4f;
+      --secondary-color: #2c5282;
+      --accent-color: #1a4a7a;
+      --text-color: #1e2a3a;
+      --text-light: #4a5b73;
+      --bg-color: #f4f6f9;
+      --white: #ffffff;
+      --border-color: #dce3ef;
+      --hover-bg: #e8edf5;
+      --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+      --radius: 20px;
+      --transition: 0.2s ease-in-out;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary-color);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: var(--white);
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      opacity: 0.95;
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--white);
+      color: var(--primary-color);
+      padding: 0.9rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .section-title i {
+      margin-right: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+      border-top: 4px solid var(--secondary-color);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px -12px rgba(0,0,0,0.18);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    /* Topics Section */
+    .topics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .topic-tag {
+      background: var(--hover-bg);
+      color: var(--secondary-color);
+      padding: 0.5rem 1.2rem;
+      border-radius: 25px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .topic-tag:hover {
+      background: var(--secondary-color);
+      color: var(--white);
+    }
+
+    /* Newsletter Section */
+    .newsletter {
+      background: var(--primary-color);
+      color: var(--white);
+      padding: 4rem 2rem;
+      text-align: center;
+      border-radius: var(--radius);
+      margin: 4rem auto;
+      max-width: 800px;
+    }
+
+    .newsletter h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .newsletter-form input[type="email"] {
+      padding: 0.9rem 1.5rem;
+      border-radius: 50px;
+      border: none;
+      font-size: 1rem;
+      min-width: 280px;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .newsletter-form button {
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      border: none;
+      background: var(--white);
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+    }
+
+    .newsletter-form button:hover {
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary-color);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.95rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      list-style: none;
+    }
+
+    .social-links a {
+      color: var(--white);
+      font-size: 1.3rem;
+      transition: opacity var(--transition);
+    }
+
+    .social-links a:hover {
+      opacity: 0.7;
+    }
+
+    /* Accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .menu-toggle {
+        display: block;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .newsletter h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      nav, .newsletter {
+        display: none;
+      }
+      
+      body {
+        background: white;
+        color: black;
+      }
+      
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      
+      .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav role="navigation" aria-label="Main">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <i class="fas fa-microchip"></i>
+        CyberTrendHub
+      </a>
+      <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#trends">Trends</a></li>
+        <li><a href="#insights">Insights</a></li>
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-content">
+      <h1 id="hero-heading">Explore the Future of Technology</h1>
+      <p>Stay ahead with cutting-edge insights on blockchain, AI, Web3, and emerging tech trends shaping tomorrow's digital landscape.</p>
+      <a href="" class="cta-button">Discover More</a>
+    </div>
+  </section>
+
+  <!-- Trends Section -->
+  <section id="trends" class="section">
+    <div class="container">
+      <h2 class="section-title">
+        <i class="fas fa-chart-line"></i>
+        Trending Technologies
+      </h2>
+      <div class="cards-grid">
+        <article class="card">
+          <div class="card-icon">
+            <i class="fab fa-ethereum"></i>
+          </div>
+          <h3>Blockchain & Web3</h3>
+          <p>Decentralized applications, smart contracts, and the future of digital finance. Explore how blockchain is transforming industries.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>Artificial Intelligence</h3>
+          <p>Machine learning, neural networks, and AI-powered solutions revolutionizing business processes and user experiences.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Cybersecurity</h3>
+          <p>Protecting digital assets in an increasingly connected world. Learn about zero-trust security and threat intelligence.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">
+            <i class="fas fa-cloud"></i>
+          </div>
+          <h3>Cloud Computing</h3>
+          <p>Scalable infrastructure, serverless architecture, and multi-cloud strategies driving the next generation of applications.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <h3>IoT & Edge Computing</h3>
+          <p>Smart devices, edge networks, and real-time data processing connecting the physical and digital worlds.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h3>DevOps & Automation</h3>
+          <p>CI/CD pipelines, infrastructure as code, and automated testing accelerating software delivery and reliability.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Insights Section -->
+  <section id="insights" class="section">
+    <div class="container">
+      <h2 class="section-title">
+        <i class="fas fa-lightbulb"></i>
+        Key Insights
+      </h2>
+      <div class="topics-list" role="list">
+        <span class="topic-tag" role="listitem">#DigitalTransformation</span>
+        <span class="topic-tag" role="listitem">#SmartContracts</span>
+        <span class="topic-tag" role="listitem">#DeFi</span>
+        <span class="topic-tag" role="listitem">#MachineLearning</span>
+        <span class="topic-tag" role="listitem">#CloudNative</span>
+        <span class="topic-tag" role="listitem">#ZeroTrust</span>
+        <span class="topic-tag" role="listitem">#EdgeComputing</span>
+        <span class="topic-tag" role="listitem">#APIFirst</span>
+        <span class="topic-tag" role="listitem">#TechInnovation</span>
+        <span class="topic-tag" role="listitem">#FutureOfWork</span>
+        <span class="topic-tag" role="listitem">#DataPrivacy</span>
+        <span class="topic-tag" role="listitem">#SustainableTech</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section id="newsletter" class="container">
+    <div class="newsletter">
+      <h2>Stay Updated</h2>
+      <p>Get the latest tech insights delivered to your inbox weekly.</p>
+      <form class="newsletter-form" action="#" method="POST" aria-label="Newsletter signup">
+        <label for="email" class="sr-only">Email address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required aria-required="true">
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" role="contentinfo">
+    <div class="container">
+      <ul class="social-links">
+        <li>
+          <a href="https://github.com/PhemcodeJay" target="_blank" aria-label="GitHub">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+        </li>
+        <li>
+          <a href="https://linkedin.com/in/Phemcode" target="_blank" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i> LinkedIn
+          </a>
+        </li>
+        <li>
+          <a href="https://cybertrendhub.onrender.com" target="_blank" aria-label="Website">
+            <i class="fas fa-globe"></i> Web
+          </a>
+        </li>
+        <li>
+          <a href="https://wa.me/254101674289" target="_blank" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+        </li>
+      </ul>
+      <p>&copy; <span id="year"></span> CyberTrendHub. All rights reserved.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
+        Empowering innovation through technology insights.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Dynamic year update
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Mobile menu toggle (basic implementation)
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    menuToggle.addEventListener('click', () => {
+      navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+      menuToggle.setAttribute('aria-expanded', 
+        menuToggle.getAttribute('aria-expanded') === 'false' ? 'true' : 'false'
+      );
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
